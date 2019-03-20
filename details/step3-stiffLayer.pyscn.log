@@ -1,0 +1,18 @@
+
+--- NEW SESSION: 18/02/2019 15:41:09 ---
+/finger/modelSubTopo/container.drawHexahedra = 0
+/finger/modelSubTopo/container.drawTetrahedra = 0
+/finger/modelSubTopo/container.drawTriangles = 0
+/finger/modelSubTopo/container.drawQuads = 0
+/finger/modelSubTopo/container.drawEdges = 0
+/finger/modelSubTopo/FEM.drawHeterogeneousTetra = 0
+/finger/modelSubTopo/FEM.drawAsEdges = 0
+/finger/boxROISubTopo.drawBoxes = 1
+/finger/boxROISubTopo.drawPoints = 0
+/finger/boxROISubTopo.drawEdges = 0
+/finger/boxROISubTopo.drawQuads = 1
+/finger/boxROISubTopo.drawSize = 9.56
+/finger/boxROISubTopo.drawBoxes = 0
+/finger/boxROISubTopo.drawQuads = 0
+/finger/boxROISubTopo.drawSize = 0
+/finger/modelSubTopo/FEM.vonMisesPerElement = 0 0 0 0 0

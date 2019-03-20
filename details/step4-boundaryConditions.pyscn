@@ -1,0 +1,28 @@
+import Sofa
+
+import os
+
+def createScene(rootNode):
+
+        rootNode.createObject('VisualStyle', displayFlags='showForceFields showBehaviorModels')
+        rootNode.createObject('RequiredPlugin', name='soft', pluginName='SoftRobots')
+        #rootNode.findData("bbox").value = "-100 -100 -100 100 100 100"
+        rootNode.findData('gravity').value='-9810 0 0';
+        
+        actuator = rootNode.createChild('actuator')
+        actuator.createObject('MeshVTKLoader', name='loader', filename='data/mesh/actuator.vtk')
+        actuator.createObject('Mesh', src='@loader', name='container')
+        actuator.createObject('MechanicalObject', name='tetras', template='Vec3d', showObject='true', showObjectScale='1')
+        actuator.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus='500', drawAsEdges="true")
+        actuator.createObject('UniformMass', totalMass='0.0008')
+        actuator.createObject('BoxROI', name='boxROI', box='-22.5 20 -22.5 22.5 25 22.5', drawBoxes='true')
+        actuator.createObject('RestShapeSpringsForceField', points='@boxROI.indices', stiffness='1e12', angularStiffness='1e12')
+        actuator.createObject('BoxROI', name='boxROISubTopo', box='-22.5 20 -22.5 22.5 25 22.5', drawBoxes='true')
+        actuator.createObject('BoxROI', name='boxROISubTopo2', box='-22.5 -20 -22.5 22.5 -25 22.5', drawBoxes='true')
+        
+        modelSubTopo = actuator.createChild('modelSubTopo')
+        modelSubTopo.createObject('Mesh', position='@loader.position', tetrahedra="@boxROISubTopo.tetrahedraInROI", name='container')
+        modelSubTopo.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus='1500')
+        modelSubTopo2 = actuator.createChild('modelSubTopo2')
+        modelSubTopo2.createObject('Mesh', position='@loader.position', tetrahedra="@boxROISubTopo2.tetrahedraInROI", name='container')
+        modelSubTopo2.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus='1500')

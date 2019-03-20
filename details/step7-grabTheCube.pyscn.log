@@ -1,0 +1,111 @@
+
+--- NEW SESSION: 18/02/2019 16:22:14 ---
+/finger1/RestShapeSpringsForceField.springColor = 0 1 0 1
+/finger1/cavity/SurfacePressureConstraint.cavityVolume = 8902.71
+/finger1/cavity/SurfacePressureConstraint.value = 0
+/finger1/cavity/SurfacePressureConstraint.pressure = 0
+/finger1/cavity/SurfacePressureConstraint.volumeGrowth = 15.206
+/finger2/cavity/SurfacePressureConstraint.cavityVolume = 8894.39
+/finger2/cavity/SurfacePressureConstraint.value = 0
+/finger2/cavity/SurfacePressureConstraint.volumeGrowth = 6.88947
+/finger2/cavity/SurfacePressureConstraint.pressure = 0
+/finger3/cavity/SurfacePressureConstraint.value = 0
+/finger3/cavity/SurfacePressureConstraint.cavityVolume = 8184.97
+/finger3/cavity/SurfacePressureConstraint.pressure = -0.14
+/finger3/cavity/SurfacePressureConstraint.volumeGrowth = -702.528
+
+--- NEW SESSION: 18/02/2019 16:37:50 ---
+/finger1/cavity/SurfacePressureConstraint.cavityVolume = 23814.7
+/finger1/cavity/SurfacePressureConstraint.pressure = 1.5
+/finger1/cavity/SurfacePressureConstraint.volumeGrowth = 14927.2
+/finger1/cavity/SurfacePressureConstraint.value = 1.2501
+/finger1/cavity/SurfacePressureConstraint.cavityVolume = 6072.02
+/finger1/cavity/SurfacePressureConstraint.volumeGrowth = -2815.48
+/finger1/cavity/SurfacePressureConstraint.pressure = -0.5899
+
+--- NEW SESSION: 18/02/2019 16:40:19 ---
+/finger1/cavity/SurfacePressureConstraint.cavityVolume = 8903.25
+/finger1/cavity/SurfacePressureConstraint.pressure = 0.0001
+/finger1/cavity/SurfacePressureConstraint.volumeGrowth = 15.7465
+/finger1/cavity/SurfacePressureConstraint.cavityVolume = 8902.71
+/finger1/cavity/SurfacePressureConstraint.volumeGrowth = 15.2133
+/finger1/cavity/SurfacePressureConstraint.pressure = 0
+/finger1/cavity/SurfacePressureConstraint.cavityVolume = 11353.2
+/finger1/cavity/SurfacePressureConstraint.volumeGrowth = 2465.71
+/finger1/cavity/SurfacePressureConstraint.pressure = 0.4201
+/finger1/cavity/SurfacePressureConstraint.cavityVolume = 18398.4
+/finger1/cavity/SurfacePressureConstraint.pressure = 1.1601
+/finger1/cavity/SurfacePressureConstraint.volumeGrowth = 9510.86
+/finger1/cavity/SurfacePressureConstraint.cavityVolume = 23911.1
+/finger1/cavity/SurfacePressureConstraint.pressure = 1.5
+/finger1/cavity/SurfacePressureConstraint.volumeGrowth = 15023.6
+
+--- NEW SESSION: 08/03/2019 15:42:17 ---
+/actuator1/cavity/SurfacePressureConstraint.cavityVolume = 5.27663e+81
+/actuator1/cavity/SurfacePressureConstraint.value = 2
+/actuator1/cavity/SurfacePressureConstraint.pressure = 2
+/actuator1/cavity/SurfacePressureConstraint.volumeGrowth = 5.27663e+81
+
+--- NEW SESSION: 10/03/2019 22:15:13 ---
+/actuator1/cavity/SurfacePressureConstraint.cavityVolume = 4674.8
+/actuator1/cavity/SurfacePressureConstraint.pressure = 0
+/actuator1/cavity/SurfacePressureConstraint.volumeGrowth = 9.85576
+
+--- NEW SESSION: 10/03/2019 23:37:34 ---
+/actuator1/cavity/SurfacePressureConstraint.cavityVolume = 17584.6
+/actuator1/cavity/SurfacePressureConstraint.pressure = 1.5
+/actuator1/cavity/SurfacePressureConstraint.volumeGrowth = 12919.7
+/actuator2/cavity/SurfacePressureConstraint.cavityVolume = 10691.6
+/actuator2/cavity/SurfacePressureConstraint.value = 1
+/actuator2/cavity/SurfacePressureConstraint.pressure = 1
+/actuator2/cavity/SurfacePressureConstraint.volumeGrowth = 6026.7
+/actuator2/cavity/SurfacePressureConstraint.cavityVolume = 4664.78
+/actuator2/cavity/SurfacePressureConstraint.volumeGrowth = -0.164476
+/actuator1/cavity.time = 0.83
+/actuator1/cavity/SurfacePressureConstraint.cavityVolume = 4668.01
+/actuator1/cavity/SurfacePressureConstraint.volumeGrowth = 3.06766
+/actuator2/cavity/SurfacePressureConstraint.cavityVolume = 17920.2
+/actuator2/cavity/SurfacePressureConstraint.volumeGrowth = 13255.3
+/actuator2/cavity/SurfacePressureConstraint.pressure = 1.5
+
+--- NEW SESSION: 18/03/2019 21:16:38 ---
+/actuator1/TetrahedronSetGeometryAlgorithms.drawColorTetrahedra = 1 1 0 1
+/actuator1/TetrahedronSetGeometryAlgorithms.drawColorEdges = 0.4 1 0.298039 1
+/actuator1/TetrahedronSetGeometryAlgorithms.drawColorTriangles = 0.298039 0.498039 0.8 1
+
+--- NEW SESSION: 18/03/2019 21:21:18 ---
+/actuator1/cavity/SurfacePressureConstraint.value = 0
+/actuator1/cavity/SurfacePressureConstraint.pressure = 0
+/actuator1/cavity/SurfacePressureConstraint.volumeGrowth = 3.66526e-10
+
+--- NEW SESSION: 18/03/2019 21:29:09 ---
+/actuator1/cavity/SurfacePressureConstraint.pressure = 1.5
+/actuator1/cavity/SurfacePressureConstraint.volumeGrowth = 3.57728e-06
+/actuator1/cavity/SurfacePressureConstraint.volumeGrowth = 2.44321e-06
+/actuator1/cavity/SurfacePressureConstraint.pressure = 1.0301
+/actuator1/cavity/SurfacePressureConstraint.pressure = 0
+/actuator1/cavity/SurfacePressureConstraint.volumeGrowth = 3.57431e-10
+/actuator1/cavity/SurfacePressureConstraint.pressure = 1.5
+/actuator1/cavity/SurfacePressureConstraint.volumeGrowth = 3.56341e-06
+
+--- NEW SESSION: 19/03/2019 19:18:49 ---
+/actuator1/boxROISubTopo.drawPoints = 0
+/actuator1/boxROISubTopo.drawEdges = 0
+/actuator1/boxROISubTopo.drawTriangles = 0
+/actuator1/boxROI.drawBoxes = 1
+/actuator1/boxROI.drawEdges = 0
+/actuator1/boxROISubTopo2.drawSize = 1
+/actuator1/boxROISubTopo.drawSize = 1
+/actuator1/boxROI.drawBoxes = 1
+/actuator1/boxROI.drawPoints = 0
+/actuator1/boxROI.drawTriangles = 0
+/actuator1/boxROI.drawTetrahedra = 0
+/actuator1/boxROI.drawHexahedra = 0
+/actuator1/boxROI.drawQuads = 0
+/actuator1/boxROI.drawSize = 1
+/actuator1/boxROI.drawSize = 1
+
+--- NEW SESSION: 19/03/2019 20:12:04 ---
+/actuator1/cavity/SurfacePressureConstraint.cavityVolume = 4760.21
+/actuator1/cavity/SurfacePressureConstraint.pressure = 0.02
+/actuator1/cavity/SurfacePressureConstraint.volumeGrowth = 95.2727

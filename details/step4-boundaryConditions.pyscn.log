@@ -1,0 +1,17 @@
+
+--- NEW SESSION: 18/02/2019 15:45:24 ---
+/finger/boxROI.drawSize = 0
+/finger/RestShapeSpringsForceField.springColor = 0 1 0 1
+/finger/RestShapeSpringsForceField.drawSpring = 0
+
+--- NEW SESSION: 07/03/2019 17:09:35 ---
+/actuator/boxROI.box = -10 0 -20 0 30 20
+/actuator/boxROISubTopo.drawEdges = 0
+/actuator/boxROISubTopo.drawTriangles = 0
+/actuator/boxROISubTopo.drawTetrahedra = 0
+/actuator/boxROISubTopo.drawHexahedra = 0
+/actuator/boxROISubTopo.drawQuads = 0
+/actuator/boxROISubTopo.drawBoxes = 1
+/actuator/boxROISubTopo.drawPoints = 0
+/actuator/boxROISubTopo.drawBoxes = 1
+/actuator/boxROI.drawBoxes = 1
