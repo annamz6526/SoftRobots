@@ -82,24 +82,21 @@ def createScene(rootNode):
 				##########################################################################################
 
 				connector = rootNode.createChild('connector')
-				#connector.createObject('MeshSTLLoader', name="loader", filename="data/mesh/connector.stl", rotation="90 90 180", translation=str(translateFingerX[0]) + " " + str(translateFingerY[0] + 20) + " " + str((translateFingerZ[0] + translateFingerZ[1]) / 2))
-				#connector.createObject('Mesh', src="@loader")
 				connector.createObject("EulerImplicit")
 				connector.createObject("CGLinearSolver")
-				#connector.createObject('MechanicalObject', template='Rigid3d', name="dofs", showObject="true", showObjectScale="2", rotation="90 90 180", translation=str(translateFingerX[0]) + " " + str(translateFingerY[0] + 20) + " " + str((translateFingerZ[0] + translateFingerZ[1]) / 2))
-				connector.createObject('MechanicalObject', template='Rigid3d', name="dofs", showObject="true", showObjectScale="2", rotation="0 90 90", translation=str(translateFingerX[0]) + " " + str(translateFingerY[0] + 20) + " " + str((translateFingerZ[0] + translateFingerZ[1]) / 2))
-				#connector.createObject('UniformMass', totalMass="0.1")
+				connector.createObject('MechanicalObject', template='Rigid3d', name="dofs", rotation="90 90 180", translation=str(translateFingerX[0]) + " " + str(translateFingerY[0] + 20) + " " + str((translateFingerZ[0] + translateFingerZ[1]) / 2))
+				connector.createObject('UniformMass', totalMass="0.1")
 				connector.createObject('UncoupledConstraintCorrection')
 
 				#collision model
-				connectorCollis = connector.createChild('connectorCollis')
-				connectorCollis.createObject('MeshSTLLoader', name="loader", filename="data/mesh/connector.stl")
-				connectorCollis.createObject('Mesh', src="@loader")
-				connectorCollis.createObject('MechanicalObject')
+				#connectorCollis = connector.createChild('connectorCollis')
+				#connectorCollis.createObject('MeshSTLLoader', name="loader", filename="data/mesh/connector.stl")
+				#connectorCollis.createObject('Mesh', src="@loader")
+				#connectorCollis.createObject('MechanicalObject', showObject="true")
 				#connectorCollis.createObject('Triangle')
 				#connectorCollis.createObject('Line')
 				#connectorCollis.createObject('Point')
-				connectorCollis.createObject('RigidMapping')
+				#connectorCollis.createObject('RigidMapping')
 
 				# visual model
 				connectorVisual = connector.createChild("connectorVisual")
@@ -108,8 +105,8 @@ def createScene(rootNode):
 				connectorVisual.createObject('RigidMapping')
 
 				constraint = connector.createChild('Constraint')
-				constraint.createObject('MechanicalObject', name="points", template="Vec3d", rotation="90 0 -90", position= "0 0 "+ str(translateFingerZ[0] - 22.5) + " 0 0 "+ str(translateFingerZ[0] + 22.5) + " 0 0 "+ str(translateFingerZ[1] - 22.5) + " 0 0 "+ str(translateFingerZ[1] + 22.5) + " 22.5 0 " + str(translateFingerZ[0]) + " -22.5 0 " + str(translateFingerZ[0]) + " 22.5 0 " + str(translateFingerZ[1]) + " -22.5 0 " + str(translateFingerZ[1]), showObject="true", showObjectScale="5")
-				constraint.createObject('RigidMapping')
+				constraint.createObject('MechanicalObject', name="points", template="Vec3d", position=str(translateFingerX[0]) + " " + str(translateFingerY[0] + 22.5) + " " + str(translateFingerZ[0] - 22.5) + " " + str(translateFingerX[0]) + " " + str(translateFingerY[0] + 22.5) + " " + str(translateFingerZ[1] - 22.5) + " " + str(translateFingerX[0]) + " " + str(translateFingerY[0] + 22.5) + " " + str(translateFingerZ[0] + 22.5) + " " + str(translateFingerX[0]) + " " + str(translateFingerY[0] + 22.5) + " " + str(translateFingerZ[1] + 22.5), showObject="true", showObjectScale="5")
+				
 
 
 				for i in range(2):
@@ -178,12 +175,11 @@ def createScene(rootNode):
 					
 					
 					constraint = e.createChild("Constraint")
-					constraint.createObject('MechanicalObject', name="points", template="Vec3d", position=str(translateFingerX[0]) + " " + str(translateFingerY[0] + 20) + " " + str(translateFingerZ[i] - 22.5)  + " " + str(translateFingerX[0]) + " " + str(translateFingerY[0] + 20) + " " + str(translateFingerZ[i] + 22.5) + " " + str(translateFingerX[0] + 22.5) + " " + str(translateFingerY[0] + 20) + " " + str(translateFingerZ[i]) + " " + str(translateFingerX[0] - 22.5) + " " + str(translateFingerY[0] + 20) + " " + str(translateFingerZ[i]))
+					constraint.createObject('MechanicalObject', name="points", template="Vec3d", position=str(translateFingerX[0]) + " " + str(translateFingerY[0] + 22.5) + " " + str(translateFingerZ[i] - 22.5)  + " " + str(translateFingerX[0]) + " " + str(translateFingerY[0] + 22.5) + " " + str(translateFingerZ[i] + 22.5))
 					constraint.createObject("BarycentricMapping")
 
-
-				rootNode.createObject('BilateralInteractionConstraint', name = "BilateralInteractionConstraint1", template = "Vec3d", object1 = "@connector/Constraint/points", object2 = "@actuator1/ElasticMaterialObject/Constraint/points", first_point = "0 1 4 5", second_point = "0 1 2 3")
-				rootNode.createObject('BilateralInteractionConstraint', name = "BilateralInteractionConstraint2", template = "Vec3d", object1 = "@connector/Constraint/points", object2 = "@actuator2/ElasticMaterialObject/Constraint/points", first_point = "2 3 6 7", second_point = "0 1 2 3")
+				rootNode.createObject('BilateralInteractionConstraint', name = "BilateralInteractionConstraint1", template = "Vec3d", object1 = "@Connector/Constraint/points", object2 = "@actuator1/ElasticMaterialObject/Constraint/points", first_point = "0 2", second_point = "0 1")
+				rootNode.createObject('BilateralInteractionConstraint', name = "BilateralInteractionConstraint2", template = "Vec3d", object1 = "@Connector/Constraint/points", object2 = "@actuator2/ElasticMaterialObject/Constraint/points", first_point = "1 3", second_point = "0 1")
 
 				#rootNode.createObject('AttachConstraint', template = "Vec3d", object1 = "@Connector/Constraint/points", object2 = "@actuator1/ElasticMaterialObject/Constraint/points", indices1 = "0 2", indices2 = "0 1", constraintFactor="1 1", twoWay="true")
 				#rootNode.createObject('AttachConstraint', template = "Vec3d", object1 = "@Connector/Constraint/points", object2 = "@actuator2/ElasticMaterialObject/Constraint/points", indices1 = "1 3", indices2 = "0 1", constraintFactor="1 1", twoWay="true")

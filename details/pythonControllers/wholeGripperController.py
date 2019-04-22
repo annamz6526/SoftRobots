@@ -33,8 +33,8 @@ class controller(Sofa.PythonScriptController):
             self.node = node
             self.actuator1Node=self.node.getChild('actuator1')
             self.actuator2Node=self.node.getChild('actuator2')
-            self.pressureConstraint1Node = self.actuator1Node.getChild('cavity')
-            self.pressureConstraint2Node = self.actuator2Node.getChild('cavity')
+            self.pressureConstraint1Node = self.actuator1Node.ElasticMaterialObject.getChild('cavity')
+            self.pressureConstraint2Node = self.actuator2Node.ElasticMaterialObject.getChild('cavity')
 
             self.centerPosY = 70
             self.centerPosZ = 0
@@ -44,8 +44,10 @@ class controller(Sofa.PythonScriptController):
             self.dt = self.node.findData('dt').value
             incr = self.dt*1000.0;
 
-            self.MecaObject1=self.actuator1Node.getObject('tetras');
-            self.MecaObject2=self.actuator2Node.getObject('tetras');
+            #self.MecaObject1=self.actuator1Node.ElasticMaterialObject.getObject('tetras');
+            #self.MecaObject2=self.actuator2Node.ElasticMaterialObject.getObject('tetras');
+            self.MecaObject1=self.actuator1Node.ElasticMaterialObject.getObject('dofs');
+            self.MecaObject2=self.actuator2Node.ElasticMaterialObject.getObject('dofs');
 
             self.pressureConstraint1 = self.pressureConstraint1Node.getObject('SurfacePressureConstraint')
             self.pressureConstraint2 = self.pressureConstraint2Node.getObject('SurfacePressureConstraint')

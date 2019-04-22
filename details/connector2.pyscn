@@ -1,0 +1,106 @@
+import Sofa
+import math
+import os
+
+from stlib.physics.deformable import ElasticMaterialObject
+from stlib.physics.rigid import *
+from stlib.components import addOrientedBoxRoi
+from splib.numerics import vec3
+from stlib.scene import Scene, Interaction
+
+
+youngModulusFingers = 500
+youngModulusStiffLayerFingers = 1500
+
+radius = 70
+angle1 = 0*math.pi/180  # Angle between 1st and 2nd finger in radian
+#angle2 = 240*math.pi/180  # Angle between 1st and 3rd finger in radian
+
+# red, green, blue
+translateFingerX = [26, 26]
+translateFingerY = [-170, -170]
+translateFingerZ = [-40, 40]
+translateFinger1 = str(translateFingerX[0]) + " " + str(translateFingerY[0]) + " " + str(translateFingerZ[0])
+translateFinger2 = str(translateFingerX[1]) + " " + str(translateFingerY[1]) + " " + str(translateFingerZ[1])
+translations= [translateFinger1,translateFinger2]
+angles=[0,angle1]
+
+def createScene(rootNode):
+
+				rootNode.createObject('RequiredPlugin', pluginName='SoftRobots')
+				rootNode.createObject('RequiredPlugin', name='SofaPython', pluginName='SofaPython')
+				rootNode.createObject('VisualStyle', displayFlags='showVisualModels hideBehaviorModels hideCollisionModels hideBoundingCollisionModels hideForceFields showInteractionForceFields hideWireframe')
+				rootNode.findData('gravity').value='-9810 0 0';
+				rootNode.createObject('FreeMotionAnimationLoop')
+				rootNode.createObject('GenericConstraintSolver', tolerance="1e-12", maxIterations="10000")
+				rootNode.createObject('CollisionPipeline', verbose="0")
+				rootNode.createObject('BruteForceDetection', name="N2")
+				rootNode.createObject('CollisionResponse', response="FrictionContact", responseParams="mu=0.6")
+				rootNode.createObject('LocalMinDistance', name="Proximity", alarmDistance="5", contactDistance="1", angleCone="0.00")
+
+				rootNode.createObject('BackgroundSetting', color='0 0.168627 0.211765')
+				rootNode.createObject('OglSceneFrame', style="Arrows", alignment="TopRight")
+				#rootNode.createObject('PythonScriptController', filename="pythonControllers/wholeGripperController.py", classname="controller")
+
+				planeNode = rootNode.createChild('Plane')
+				planeNode.createObject('MeshObjLoader', name='loader', filename="data/mesh/floorFlat.obj", triangulate="true", rotation="0 0 270", scale=10, translation="0 0 0")
+				planeNode.createObject('Mesh', src="@loader")
+				planeNode.createObject('MechanicalObject', src="@loader")
+				planeNode.createObject('Triangle', simulated="0", moving="0")
+				planeNode.createObject('Line', simulated="0", moving="0")
+				planeNode.createObject('Point', simulated="0", moving="0")
+				planeNode.createObject('OglModel',name="Visual", src="@loader", color="1 0 0 1")
+
+				cube = rootNode.createChild('cube')
+				cube.createObject('EulerImplicit', name='odesolver')
+				cube.createObject('SparseLDLSolver', name='linearSolver')
+				cube.createObject('MechanicalObject', template="Rigid3d", position='25 -80 0 0 0 0 0')
+				cube.createObject('UniformMass', totalMass='0.1')
+				cube.createObject('UncoupledConstraintCorrection')
+
+				#collision
+				cubeCollis = cube.createChild('cubeCollis')
+				cubeCollis.createObject('MeshObjLoader', name="loader", filename="data/mesh/smCube27.obj", triangulate="true",  scale="6")
+				cubeCollis.createObject('Mesh', src="@loader")
+				cubeCollis.createObject('MechanicalObject')
+				cubeCollis.createObject('Triangle')
+				cubeCollis.createObject('Line')
+				cubeCollis.createObject('Point')
+				cubeCollis.createObject('RigidMapping')
+
+				#visualization
+				cubeVisu = cube.createChild('cubeVisu')
+				cubeVisu.createObject('MeshObjLoader', name="loader", filename="data/mesh/smCube27.obj")
+				cubeVisu.createObject('OglModel', name="Visual", src="@loader", color="0.0 0.1 0.5", scale="6.2")
+				cubeVisu.createObject('RigidMapping')
+
+
+				##########################################################################################
+				## Connector
+				##########################################################################################
+
+				connector = rootNode.createChild('Connector')
+				connector.createObject('MeshSTLLoader', name='loader', filename="data/mesh/connector.stl", rotation="0 90 90", translation=str(translateFingerX[0]) + " " + str(translateFingerY[0] + 20) + " " + str((translateFingerZ[0] + translateFingerZ[1]) / 2))
+				connector.createObject('Mesh', src="@loader")
+				connector.createObject('OglModel',name="Visual", src="@loader")
+				connector.createObject("EulerImplicit")
+				connector.createObject("CGLinearSolver")
+				connector.createObject('MechanicalObject', template='Rigid3d', name="dofs")
+				connector.createObject('UniformMass', totalMass="0.1")
+				connector.createObject('UncoupledConstraintCorrection', compliance="1")
+
+				#collision model
+				connectorCollis = connector.createChild('connectorCollis')
+				#connectorCollis.createObject('MeshSTLLoader', name="loader", filename="data/mesh/connector.stl")
+				connectorCollis.createObject('Mesh', src=connector.loader)
+				connectorCollis.createObject('MechanicalObject', showObject="true")
+				connectorCollis.createObject('Triangle')
+				connectorCollis.createObject('Line')
+				connectorCollis.createObject('Point')
+				#connectorCollis.createObject('RigidMapping')
+
+				constraint = connector.createChild('Constraint')
+				constraint.createObject('MechanicalObject', name="points", template="Vec3d", position=str(translateFingerX[0]) + " " + str(translateFingerY[0] + 20) + " " + str(translateFingerZ[0] - 22.5) + " " + str(translateFingerX[0]) + " " + str(translateFingerY[0] + 20) + " " + str(translateFingerZ[1] - 22.5) + " " + str(translateFingerX[0]) + " " + str(translateFingerY[0] + 20) + " " + str(translateFingerZ[0] + 22.5) + " " + str(translateFingerX[0]) + " " + str(translateFingerY[0] + 20) + " " + str(translateFingerZ[1] + 22.5), showObject="true", showObjectScale="5")
+
+
+				return rootNode
