@@ -1,6 +1,7 @@
 import Sofa
 import math
 import os
+import scipy
 
 youngModulusFingers = 500
 youngModulusStiffLayerFingers = 1500
@@ -72,11 +73,12 @@ def createScene(rootNode):
 					finger.createObject('SparseLDLSolver', name='preconditioner')
 
 					finger.createObject('MeshVTKLoader', name='loader', filename='data/mesh/pneunetCutCoarse.vtk',rotation=str(360 - angles[i]*180/math.pi)+ " 0 0", translation = translations[i])
-					finger.createObject('TetrahedronSetTopologyContainer', src='@loader', name='container')
-					finger.createObject('TetrahedronSetTopologyModifier')
-					finger.createObject('TetrahedronSetTopologyAlgorithms', template='Vec3d')
-					finger.createObject('TetrahedronSetGeometryAlgorithms', template='Vec3d')
+					#finger.createObject('TetrahedronSetTopologyContainer', src='@loader', name='container')
+					#finger.createObject('TetrahedronSetTopologyModifier')
+					#finger.createObject('TetrahedronSetTopologyAlgorithms', template='Vec3d')
+					#finger.createObject('TetrahedronSetGeometryAlgorithms', template='Vec3d')
 
+					finger.createObject('Mesh', src='@loader', name='container')
 					finger.createObject('MechanicalObject', name='tetras', template='Vec3d', showIndices='false', showIndicesScale='4e-5', rx='0', dz='0')
 					finger.createObject('UniformMass', totalMass= 0.04)
 					finger.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio=0.3,  youngModulus=youngModulusFingers, drawAsEdges="1")
@@ -95,9 +97,9 @@ def createScene(rootNode):
 					##########################################
 					modelSubTopo = finger.createChild('modelSubTopo')
 					if i == 0:
-						modelSubTopo.createObject('TetrahedronSetTopologyContainer', position='@loader.position', tetrahedra="@boxROISubTopo.tetrahedraInROI", name='container')
+						modelSubTopo.createObject('Mesh', position='@loader.position', tetrahedra="@boxROISubTopo.tetrahedraInROI", name='container')
 					else:
-						modelSubTopo.createObject('TetrahedronSetTopologyContainer', position='@loader.position', tetrahedra="@../../finger1/boxROISubTopo.tetrahedraInROI", name='container')
+						modelSubTopo.createObject('Mesh', position='@loader.position', tetrahedra="@../../finger1/boxROISubTopo.tetrahedraInROI", name='container')
 					modelSubTopo.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus=str(youngModulusStiffLayerFingers-youngModulusFingers))
 
 
@@ -108,7 +110,7 @@ def createScene(rootNode):
 					cavity.createObject('MeshSTLLoader', name='loader', filename='data/mesh/pneunetCavityCut.stl',translation = translations[i],rotation=str(360 - angles[i]*180/math.pi)+ " 0 0")
 					cavity.createObject('Mesh', src='@loader', name='topo')
 					cavity.createObject('MechanicalObject', name='cavity')
-					cavity.createObject('SurfacePressureConstraint', name="SurfacePressureConstraint", template='Vec3d', value="0.0001", triangles='@topo.triangles', visualization='0', showVisuScale='0.0002', valueType="pressure")
+					cavity.createObject('SurfacePressureConstraint', name="SurfacePressureConstraint", template='Vec3d', value="0.0001", triangles='@topo.triangles', valueType="pressure")
 					cavity.createObject('BarycentricMapping', name='mapping',  mapForces='false', mapMasses='false')
 
 					##########################################
@@ -130,7 +132,7 @@ def createScene(rootNode):
 					##########################################
 					modelVisu = finger.createChild('visu')
 					modelVisu.createObject('MeshSTLLoader', name="loader", filename="data/mesh/pneunetCut.stl")
-					modelVisu.createObject('OglModel', src="@loader", template='ExtVec3f', color='0.7 0.7 0.7 0.6',translation = translations[i],rotation=str(360 - angles[i]*180/math.pi)+ " 0 0")
+					modelVisu.createObject('OglModel', src="@loader", template='ExtVec3d', color='0.7 0.7 0.7 0.6',translation = translations[i],rotation=str(360 - angles[i]*180/math.pi)+ " 0 0")
 					modelVisu.createObject('BarycentricMapping')
 
 				return rootNode

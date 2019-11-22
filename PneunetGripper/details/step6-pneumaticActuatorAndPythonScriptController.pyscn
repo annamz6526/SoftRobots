@@ -38,3 +38,19 @@ def createScene(rootNode):
         cavity.createObject('MechanicalObject', name='cavity')
         cavity.createObject('SurfacePressureConstraint', name="SurfacePressureConstraint", template='Vec3d', value="0.0001", triangles='@cavityMesh.triangles', valueType="pressure")
         cavity.createObject('BarycentricMapping', name='mapping', mapForces='false', mapMasses='false')
+
+
+        collisionFinger = finger.createChild('collisionFinger')
+        collisionFinger.createObject('MeshSTLLoader', name='loader', filename='data/mesh/pneunetCut.stl')
+        collisionFinger.createObject('Mesh', src='@loader', name='topo')
+        collisionFinger.createObject('MechanicalObject', name='collisMech')
+        collisionFinger.createObject('Triangle', selfCollision="false")
+        collisionFinger.createObject('Line',selfCollision="false")
+        collisionFinger.createObject('Point', selfCollision="false")
+        collisionFinger.createObject('BarycentricMapping')
+
+
+        modelVisu = finger.createChild('visu')
+        modelVisu.createObject('MeshSTLLoader', name="loader", filename="data/mesh/pneunetCut.stl")
+        modelVisu.createObject('OglModel', src="@loader", template='ExtVec3d', color='0.7 0.7 0.7 0.6')
+        modelVisu.createObject('BarycentricMapping')

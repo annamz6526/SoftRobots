@@ -1,0 +1,15 @@
+
+--- NEW SESSION: 20/11/2019 21:11:15 ---
+/finger1/RestShapeSpringsForceField.springColor = 0 1 0 1
+/finger1/cavity/SurfacePressureConstraint.volumeGrowth = 3.04975e-05
+
+--- NEW SESSION: 20/11/2019 21:17:32 ---
+/finger1/cavity/SurfacePressureConstraint.pressure = 1.45
+/finger1/cavity/SurfacePressureConstraint.volumeGrowth = 2.94809e-05
+/finger1/cavity/SurfacePressureConstraint.drawPressure = 0
+
+--- NEW SESSION: 20/11/2019 21:33:45 ---
+/finger1/RestShapeSpringsForceField.springColor = 0 1 0 1
+/finger1/cavity/SurfacePressureConstraint.cavityVolume = 8887.5
+/finger1/cavity/SurfacePressureConstraint.pressure = 1.5
+/finger1/cavity/SurfacePressureConstraint.volumeGrowth = 3.00849e-05

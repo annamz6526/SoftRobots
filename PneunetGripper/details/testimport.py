@@ -1,0 +1,1 @@
+from stlib.components import addOreintatedBoxRoi

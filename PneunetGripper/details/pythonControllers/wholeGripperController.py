@@ -54,7 +54,8 @@ class controller(Sofa.PythonScriptController):
             self.pressureConstraint2 = self.pressureConstraint2Node.getObject('SurfacePressureConstraint')
             self.pressureConstraint3 = self.pressureConstraint3Node.getObject('SurfacePressureConstraint')
 
-            if (c == "+"):
+            #if (c == "z"):
+            if (ord(c)==90):
                 print 'squeezing...'
                 pressureValue = self.pressureConstraint1.findData('value').value[0][0] + 0.01
                 if pressureValue > 1.5:
@@ -69,7 +70,8 @@ class controller(Sofa.PythonScriptController):
                     pressureValue = 1.5
                 self.pressureConstraint3.findData('value').value = str(pressureValue)
 
-            if (c == "-"):
+            #if (c == "x"):
+            if (ord(c)==88):
                 print 'releasing...'
                 pressureValue = self.pressureConstraint1.findData('value').value[0][0] - 0.01
                 self.pressureConstraint1.findData('value').value = str(pressureValue)
