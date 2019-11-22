@@ -54,35 +54,52 @@ class controller(Sofa.PythonScriptController):
 
             #if (c == "Z"):
             if ord(c)==90:
-                print 'squeezing...'
+                print 'left'
                 pressureValue = self.pressureConstraint1.findData('value').value[0][0] + 0.01
-                if pressureValue > 1.5:
-                    pressureValue = 1.5
+                if pressureValue > 0.6:
+                    pressureValue = 0.6
                 self.pressureConstraint1.findData('value').value = str(pressureValue)
-
-            #if (c == "X"):
-            if ord(c)==88:
-                print 'squeezing...'
-                pressureValue = self.pressureConstraint2.findData('value').value[0][0] + 0.01
-                if pressureValue > 1.5:
-                    pressureValue = 1.5
+                pressureValue = self.pressureConstraint2.findData('value').value[0][0] - 0.01
+                if pressureValue < 0:
+                    pressureValue = 0
                 self.pressureConstraint2.findData('value').value = str(pressureValue)
 
             #if (c == "X"):
             if ord(c)==88:
-                print 'releasing...'
+                print 'right'
+                pressureValue = self.pressureConstraint2.findData('value').value[0][0] + 0.01
+                if pressureValue > 0.6:
+                    pressureValue = 0.6
+                self.pressureConstraint2.findData('value').value = str(pressureValue)
                 pressureValue = self.pressureConstraint1.findData('value').value[0][0] - 0.01
                 if pressureValue < 0:
                     pressureValue = 0
                 self.pressureConstraint1.findData('value').value = str(pressureValue)
 
-            #if (c == "Z"):
-            if ord(c)==90:
-                print 'releasing...'
-                pressureValue = self.pressureConstraint2.findData('value').value[0][0] - 0.01
-                if pressureValue < 0:
-                    pressureValue = 0
-                self.pressureConstraint2.findData('value').value = str(pressureValue)
+            #if (c == "C"):
+            #if ord(c)==67:
+            #    print 'increase'
+            #    pressureValue = self.pressureConstraint1.findData('value').value[0][0] + 0.01
+            #    if pressureValue > 0.6:
+            #        pressureValue = 0.6
+            #    self.pressureConstraint1.findData('value').value = str(pressureValue)
+            #    pressureValue = self.pressureConstraint2.findData('value').value[0][0] + 0.01
+            #    if pressureValue > 0.6:
+            #        pressureValue = 0.6
+            #    self.pressureConstraint2.findData('value').value = str(pressureValue)
+
+            #if (c == "B"):
+            #if ord(c)==66:
+            #    print 'squeezing...'
+            #    pressureValue = self.pressureConstraint1.findData('value').value[0][0] - 0.01
+            #    if pressureValue < 0:
+            #        pressureValue = 0
+            #    self.pressureConstraint1.findData('value').value = str(pressureValue)
+            #    pressureValue = self.pressureConstraint2.findData('value').value[0][0] - 0.01
+            #    if pressureValue < 0:
+            #        pressureValue = 0
+            #    self.pressureConstraint2.findData('value').value = str(pressureValue)
+                
 
             # UP key :
             if ord(c)==19:

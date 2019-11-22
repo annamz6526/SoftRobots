@@ -23,13 +23,13 @@ class controller(Sofa.PythonScriptController):
 
             self.pressureConstraint1 = self.pressureConstraint1Node.getObject('SurfacePressureConstraint')
 
-            if (c == "+"):
+            if ord(c)==90:
                 pressureValue = self.pressureConstraint1.findData('value').value[0][0] + 0.01
                 if pressureValue > 1.5:
                     pressureValue = 1.5
                 self.pressureConstraint1.findData('value').value = str(pressureValue)
 
-            if (c == "-"):
+            if ord(c)==88:
                 pressureValue = self.pressureConstraint1.findData('value').value[0][0] - 0.01
                 if pressureValue < 0:
                     pressureValue = 0

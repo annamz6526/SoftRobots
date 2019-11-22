@@ -667,3 +667,151 @@
 
 /connector/Constraint/points.rotation = 0 0 0
 /connector/Constraint/points.velocity = 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+--- NEW SESSION: 13/11/2019 18:36:05 ---
+/actuator1/ElasticMaterialObject/cavity/SurfacePressureConstraint.cavityVolume = 4.71447e+13
+/actuator1/ElasticMaterialObject/cavity/SurfacePressureConstraint.pressure = 0.7201
+/actuator1/ElasticMaterialObject/cavity/SurfacePressureConstraint.volumeGrowth = 4.71447e+13
+/actuator1/ElasticMaterialObject/cavity/SurfacePressureConstraint.value = 0.7701
+/actuator1/ElasticMaterialObject/cavity/SurfacePressureConstraint.cavityVolume = 25199.4
+/actuator1/ElasticMaterialObject/cavity/SurfacePressureConstraint.volumeGrowth = 20534.4
+/actuator1/ElasticMaterialObject/cavity/SurfacePressureConstraint.pressure = 0.7701
+/actuator1/ElasticMaterialObject/cavity/SurfacePressureConstraint.cavityVolume = 15570.6
+/actuator1/ElasticMaterialObject/cavity/SurfacePressureConstraint.pressure = 0.6501
+/actuator1/ElasticMaterialObject/cavity/SurfacePressureConstraint.volumeGrowth = 10905.6
+/actuator1/ElasticMaterialObject/cavity/SurfacePressureConstraint.cavityVolume = 14380.4
+/actuator1/ElasticMaterialObject/cavity/SurfacePressureConstraint.pressure = 0.6
+/actuator1/ElasticMaterialObject/cavity/SurfacePressureConstraint.volumeGrowth = 9715.49
+/actuator2/ElasticMaterialObject/cavity/SurfacePressureConstraint.cavityVolume = 5324.16
+/actuator2/ElasticMaterialObject/cavity/SurfacePressureConstraint.pressure = 0
+/actuator2/ElasticMaterialObject/cavity/SurfacePressureConstraint.volumeGrowth = 659.216
+
+--- NEW SESSION: 13/11/2019 21:48:28 ---
+/actuator3/ElasticMaterialObject/Constraint/points.showObjectScale = 5
+/actuator3/ElasticMaterialObject/Constraint/points.showObject = 1
+/actuator3/ElasticMaterialObject/Constraint/points.showColor = 1 10 1 1
+
+--- NEW SESSION: 14/11/2019 00:57:30 ---
+/OglViewport.cameraPosition = 100 0 0
+/OglViewport.cameraPosition = 100 0 0
+/OglViewport.cameraPosition = 100 0 0
+/OglViewport.screenPosition = 0 0
+/OglViewport.screenSize = 500 500
+/OglViewport.cameraOrientation = 0.5 0.5 0.5 0.5
+/OglViewport.cameraPosition = 120 0 0
+/OglViewport.swapMainView = 0
+/OglViewport.drawCamera = 1
+/OglViewport.screenPosition = 0 0
+/OglViewport.screenSize = 500 500
+/OglViewport.cameraOrientation = 0.5 0.5 0.5 0.5
+/OglViewport.cameraPosition = 120 0 0
+/OglViewport.swapMainView = 0
+/OglViewport.drawCamera = 1
+/OglViewport.screenPosition = 0 0
+/OglViewport.screenSize = 500 500
+/OglViewport.cameraOrientation = 0.5 0.5 0.5 0.5
+/OglViewport.cameraPosition = 120 0 0
+/OglViewport.swapMainView = 0
+/OglViewport.drawCamera = 1
+
+--- NEW SESSION: 14/11/2019 16:55:43 ---
+/RecordedCamera.lookAt = 0.0913953 -0.118707 0.00829154
+/RecordedCamera.zFar = 818.622
+/RecordedCamera.lookAt = 0.0913953 -0.118707 0.00829154
+/RecordedCamera.zFar = 818.622
+/RecordedCamera.lookAt = 0.0913953 -0.118707 0.00829154
+/RecordedCamera.zFar = 818.622
+/RecordedCamera.position = 500 0 0
+/RecordedCamera.zNear = 14.5095
+/RecordedCamera.orientation = 0.5 0.5 0.5 0.5
+/RecordedCamera.distance = 300
+/RecordedCamera.zFar = 869.073
+/RecordedCamera.lookAt = 0 0 0
+/RecordedCamera.fieldOfView = 45
+
+--- NEW SESSION: 14/11/2019 17:00:39 ---
+/RecordedCamera.zFar = 818.616
+/RecordedCamera.lookAt = 0.115438 -0.118929 0.00207616
+/RecordedCamera.listening = 1
+/RecordedCamera.orientation = 0.519689 0.506253 0.48818 0.485089
+/RecordedCamera.position = 453.474 -4.6162 -23.9421
+
+--- NEW SESSION: 14/11/2019 17:06:09 ---
+/baseCamera.position = 500 0 0
+/baseCamera.orientation = 0.5 0.5 0.5 0.5
+/baseCamera.lookAt = 0 0 0
+/baseCamera.distance = 400
+/baseCamera.fieldOfView = 45
+/baseCamera.zNear = 14.5095
+/baseCamera.zFar = 869.073
+/baseCamera.widthViewport = 952
+/baseCamera.listening = 0
+
+--- NEW SESSION: 14/11/2019 17:09:33 ---
+/baseCamera.zFar = 818.622
+/baseCamera.projectionType = Orthographic
+/baseCamera.activated = 0
+/baseCamera.position = 498.002 40.5798 18.6348
+/baseCamera.widthViewport = 952
+/baseCamera.orientation = 0.471244 0.509205 0.530472 0.487072
+/baseCamera.lookAt = 45.8042 3.7233 1.70975
+/baseCamera.zFar = 869.074
+/baseCamera.activated = 0
+/baseCamera.position = 498.002 40.5798 18.6348
+/baseCamera.widthViewport = 952
+/baseCamera.orientation = 0.471244 0.509205 0.530472 0.487072
+/baseCamera.lookAt = 45.8042 3.7233 1.70975
+/baseCamera.zFar = 869.074
+/baseCamera.activated = 0
+/baseCamera.position = 498.002 40.5798 18.6348
+/baseCamera.widthViewport = 952
+/baseCamera.orientation = 0.471244 0.509205 0.530472 0.487072
+/baseCamera.lookAt = 45.8042 3.7233 1.70975
+/baseCamera.zFar = 869.074
+
+--- NEW SESSION: 14/11/2019 17:47:05 ---
+/cam.position = 453.459 -21.6004 11.9626
+/cam.lookAt = 0.112041 -0.121957 0.000393083
+/cam.zFar = 818.617
+/cam.orientation = 0.508283 0.47799 0.498047 0.514901
+/cam.position = 453.459 -21.6004 11.9626
+/cam.lookAt = 0.112041 -0.121957 0.000393083
+/cam.zFar = 818.617
+/cam.orientation = 0.508283 0.47799 0.498047 0.514901
+/cam.position = 453.459 -21.6004 11.9626
+/cam.lookAt = 0.112041 -0.121957 0.000393083
+/cam.zFar = 818.617
+/cam.orientation = 0.508283 0.47799 0.498047 0.514901
+/cam.zFar = 818.622
+/cam.lookAt = 0.0913953 -0.118707 0.00829154
+/cam.zFar = 818.622
+/cam.lookAt = 0.0913953 -0.118707 0.00829154
+/cam.zFar = 818.622
+/cam.lookAt = 0.0913953 -0.118707 0.00829154
+/cam.zFar = 818.613
+/cam.orientation = 0.629266 0.539868 0.351026 0.435141
+/cam.lookAt = 0.0941379 -0.118021 0.00704086
+/cam.position = 413.979 -76.6753 -170.187
+/cam.zFar = 818.613
+/cam.orientation = 0.629266 0.539868 0.351026 0.435141
+/cam.lookAt = 0.0941379 -0.118021 0.00704086
+/cam.position = 413.979 -76.6753 -170.187
+/cam.zFar = 818.613
+/cam.orientation = 0.629266 0.539868 0.351026 0.435141
+/cam.lookAt = 0.0941379 -0.118021 0.00704086
+/cam.position = 413.979 -76.6753 -170.187
+/cam.lookAt = 0 0 0
+/cam.zFar = 879.968
+/cam.widthViewport = 933
+/cam.orientation = 0.5 0.5 0.5 0.5
+/cam.position = 500 100 0
+/cam.lookAt = 0 0 0
+/cam.zFar = 879.968
+/cam.widthViewport = 933
+/cam.orientation = 0.5 0.5 0.5 0.5
+/cam.position = 500 100 0
+/cam.lookAt = 0 0 0
+/cam.zFar = 879.968
+/cam.widthViewport = 933
+/cam.orientation = 0.5 0.5 0.5 0.5
+/cam.position = 500 100 0
