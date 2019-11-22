@@ -8,7 +8,7 @@ def createScene(rootNode):
         rootNode.createObject('RequiredPlugin', name='SoftRobots', pluginName='SoftRobots')
         rootNode.createObject('RequiredPlugin', name='SofaPython', pluginName='SofaPython')
         #rootNode.findData("bbox").value = "-100 -100 -100 100 100 100"
-        rootNode.findData('gravity').value='-9810 0 0';
+        rootNode.findData('gravity').value='0 0 0';
         rootNode.createObject('PythonScriptController', filename="pythonControllers/fingerController.py", classname="controller")
         rootNode.createObject('FreeMotionAnimationLoop')
         rootNode.createObject('GenericConstraintSolver', tolerance="1e-12", maxIterations="10000")
@@ -22,10 +22,13 @@ def createScene(rootNode):
         actuator.createObject('MechanicalObject', name='tetras', template='Vec3d', showObject='true', showObjectScale='1')
         actuator.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus='500', drawAsEdges="true")
         actuator.createObject('UniformMass', totalMass='0.0008')
-        actuator.createObject('BoxROI', name='boxROI', box='-22.5 50 -22.5 22.5 55 22.5', drawBoxes='true')
+        #actuator.createObject('BoxROI', name='boxROI', box='-22.5 50 -22.5 22.5 55 22.5', drawBoxes='true')
+        actuator.createObject('BoxROI', name='boxROI', box='-13 18 -13 13 23 13', drawBoxes='true')
         actuator.createObject('RestShapeSpringsForceField', points='@boxROI.indices', stiffness='1e12', angularStiffness='1e12')
-        actuator.createObject('BoxROI', name='boxROISubTopo', box='-22.5 50 -22.5 22.5 55 22.5', drawBoxes='true')
-        actuator.createObject('BoxROI', name='boxROISubTopo2', box='-22.5 -50 -22.5 22.5 -55 22.5', drawBoxes='true')
+        #actuator.createObject('BoxROI', name='boxROISubTopo', box='-22.5 50 -22.5 22.5 55 22.5', drawBoxes='true')
+        actuator.createObject('BoxROI', name='boxROISubTopo', box='-13 18 -13 13 23 13', drawBoxes='true')
+        #actuator.createObject('BoxROI', name='boxROISubTopo2', box='-22.5 -50 -22.5 22.5 -55 22.5', drawBoxes='true')
+        actuator.createObject('BoxROI', name='boxROISubTopo2', box='-13 -18 -13 13 -23 13', drawBoxes='true')
         actuator.createObject('LinearSolverConstraintCorrection', solverName='directSolver')
         
         modelSubTopo = actuator.createChild('modelSubTopo')

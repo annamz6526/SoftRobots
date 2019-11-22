@@ -37,7 +37,7 @@ def createScene(rootNode):
 				rootNode.createObject('VisualStyle', displayFlags='showVisualModels hideBehaviorModels hideCollisionModels hideBoundingCollisionModels hideForceFields showInteractionForceFields hideWireframe')
 				rootNode.findData('gravity').value='-9810 0 0';
 				rootNode.createObject('FreeMotionAnimationLoop')
-				rootNode.createObject('GenericConstraintSolver', tolerance="1e-12", maxIterations="10000")
+				rootNode.createObject('GenericConstraintSolver', tolerance="1e-5", maxIterations="500")
 				rootNode.createObject('CollisionPipeline', verbose="0")
 				rootNode.createObject('BruteForceDetection', name="N2")
 				#rootNode.createObject('CollisionResponse', response="FrictionContact", responseParams="mu=0.6")
@@ -165,14 +165,14 @@ def createScene(rootNode):
 					constraint.createObject("BarycentricMapping")
 
 
-				rootNode.createObject('BilateralInteractionConstraint', name = "BilateralInteractionConstraint1", template = "Vec3d", object1 = "@connector1/Constraint/points", object2 = "@actuator1/ElasticMaterialObject/Constraint/points", first_point = "0 1 4 5", second_point = "0 1 2 3")
-				rootNode.createObject('BilateralInteractionConstraint', name = "BilateralInteractionConstraint2", template = "Vec3d", object1 = "@connector1/Constraint/points", object2 = "@actuator2/ElasticMaterialObject/Constraint/points", first_point = "2 3 6 7", second_point = "0 1 2 3")
+				rootNode.createObject('BilateralInteractionConstraint', name = "BilateralInteractionConstraint1", template = "Vec3d", object1 = "@connector1/Constraint/points", object2 = "@actuator1/ElasticMaterialObject/Constraint/points", first_point = "0 1 4 5", second_point = "0 1 2 3") #(0 1 4 5) (0 1 2 3)
+				rootNode.createObject('BilateralInteractionConstraint', name = "BilateralInteractionConstraint2", template = "Vec3d", object1 = "@connector1/Constraint/points", object2 = "@actuator2/ElasticMaterialObject/Constraint/points", first_point = "2 3 6 7", second_point = "0 1 2 3") #(2 3 6 7) (0 1 2 3)
 
-				rootNode.createObject('BilateralInteractionConstraint', name = "BilateralInteractionConstraint3", template = "Vec3d", object1 = "@connector1/Constraint/points", object2 = "@actuator3/ElasticMaterialObject/Constraint/points", first_point = "8 9 12 13", second_point = "4 5 6 7")
-				rootNode.createObject('BilateralInteractionConstraint', name = "BilateralInteractionConstraint4", template = "Vec3d", object1 = "@connector1/Constraint/points", object2 = "@actuator4/ElasticMaterialObject/Constraint/points", first_point = "10 11 14 15", second_point = "4 5 6 7")
+				rootNode.createObject('BilateralInteractionConstraint', name = "BilateralInteractionConstraint3", template = "Vec3d", object1 = "@connector1/Constraint/points", object2 = "@actuator3/ElasticMaterialObject/Constraint/points", first_point = "8 9 12 13", second_point = "4 5 6 7") #(8 9 12 13) (4 5 6 7)
+				rootNode.createObject('BilateralInteractionConstraint', name = "BilateralInteractionConstraint4", template = "Vec3d", object1 = "@connector1/Constraint/points", object2 = "@actuator4/ElasticMaterialObject/Constraint/points", first_point = "10 11 14 15", second_point = "4 5 6 7") #(10 11 14 15)(4 5 6 7)
 
-				rootNode.createObject('BilateralInteractionConstraint', name = "BilateralInteractionConstraint5", template = "Vec3d", object1 = "@connector2/Constraint/points", object2 = "@actuator3/ElasticMaterialObject/Constraint/points", first_point = "0 1 4 5", second_point = "0 1 2 3")
-				rootNode.createObject('BilateralInteractionConstraint', name = "BilateralInteractionConstraint6", template = "Vec3d", object1 = "@connector2/Constraint/points", object2 = "@actuator4/ElasticMaterialObject/Constraint/points", first_point = "2 3 6 7", second_point = "0 1 2 3")
+				rootNode.createObject('BilateralInteractionConstraint', name = "BilateralInteractionConstraint5", template = "Vec3d", object1 = "@connector2/Constraint/points", object2 = "@actuator3/ElasticMaterialObject/Constraint/points", first_point = "0 1 4 5", second_point = "0 1 2 3") #(0 1 4 5) (0 1 2 3)
+				rootNode.createObject('BilateralInteractionConstraint', name = "BilateralInteractionConstraint6", template = "Vec3d", object1 = "@connector2/Constraint/points", object2 = "@actuator4/ElasticMaterialObject/Constraint/points", first_point = "2 3 6 7", second_point = "0 1 2 3") #(2 3 6 7) (0 1 2 3)
 				
 
 				#rootNode.createObject('AttachConstraint', template = "Vec3d", object1 = "@Connector/Constraint/points", object2 = "@actuator1/ElasticMaterialObject/Constraint/points", indices1 = "0 2", indices2 = "0 1", constraintFactor="1 1", twoWay="true")

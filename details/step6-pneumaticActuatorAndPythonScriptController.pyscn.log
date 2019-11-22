@@ -83,3 +83,9 @@
 /actuator/cavity/cavity.showObject = 1
 /actuator/cavity/cavityMesh.drawEdges = 1
 /actuator/cavity/cavityMesh.drawTriangles = 1
+/actuator/cavity/cavityMesh.drawEdges = 1
+/actuator/cavity/cavityMesh.drawTriangles = 1
+
+--- NEW SESSION: 22/11/2019 00:14:27 ---
+/actuator/cavity/cavityMesh.drawEdges = 1
+/actuator/cavity/cavityMesh.drawTriangles = 1
