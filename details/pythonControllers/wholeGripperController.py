@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import Sofa
 import math
+import socket
 
 
 def moveRestPos(rest_pos, dx, dy, dz):
@@ -154,3 +155,18 @@ class controller(Sofa.PythonScriptController):
                 test = rotateRestPos(self.MecaObject2.rest_position, -math.pi/16, self.centerPosY,self.centerPosZ)
                 self.MecaObject2.findData('rest_position').value = test
                 self.rotAngle = self.rotAngle - math.pi/16
+
+
+    def onBeginAnimationStep(self, dt):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        sock.connect(('0.0.0.0',7777))
+
+        sock.send('I am here')
+        ack = sock.recv(1024)
+        print(ack)
+        sock.close()
+        return
+
+
+  
