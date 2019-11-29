@@ -1,0 +1,77 @@
+import Sofa
+import math
+import os
+
+from stlib.physics.deformable import ElasticMaterialObject
+from stlib.physics.rigid import *
+from stlib.components import addOrientedBoxRoi
+from splib.numerics import vec3
+from stlib.scene import Scene, Interaction
+
+
+youngModulusFingers = 200
+youngModulusStiffLayerFingers = 1500
+
+
+# red, green, blue
+
+
+def createScene(rootNode):
+
+				rootNode.createObject('RequiredPlugin', pluginName='SoftRobots')
+				rootNode.createObject('RequiredPlugin', name='SofaPython', pluginName='SofaPython')
+
+				rootNode.createObject('VisualStyle', displayFlags='showVisualModels hideBehaviorModels hideCollisionModels hideBoundingCollisionModels hideForceFields showInteractionForceFields hideWireframe')
+				rootNode.findData('gravity').value='0 -9810 0';
+				rootNode.findData('dt').value='0.05';
+				rootNode.createObject('FreeMotionAnimationLoop')
+				rootNode.createObject('GenericConstraintSolver', tolerance="1e-5", maxIterations="1000")
+				rootNode.createObject('CollisionPipeline', verbose="0")
+				rootNode.createObject('BruteForceDetection', name="N2")
+				#rootNode.createObject('CollisionResponse', response="FrictionContact", responseParams="mu=0.6")
+				rootNode.createObject('CollisionResponse', response="FrictionContact")
+				rootNode.createObject('LocalMinDistance', name="Proximity", alarmDistance="10", contactDistance="1", angleCone="0.00")
+
+				rootNode.createObject('BackgroundSetting', color='0 0.168627 0.211765')
+				rootNode.createObject('OglSceneFrame', style="Arrows", alignment="TopRight")
+				rootNode.createObject('PythonScriptController', filename="pythonControllers/new_controller.py", classname="controller")
+
+				planeNode = rootNode.createChild('Plane')
+				planeNode.createObject('MeshObjLoader', name='loader', filename="data/mesh/floorFlat.obj", triangulate="true", rotation="0 0 0", scale=13, translation="0 -50 0")
+				planeNode.createObject('Mesh', src="@loader")
+				planeNode.createObject('MechanicalObject', src="@loader")
+				planeNode.createObject('Triangle', simulated="0", moving="0")
+				planeNode.createObject('Line', simulated="0", moving="0")
+				planeNode.createObject('Point', simulated="0", moving="0")
+				planeNode.createObject('OglModel',name="Visual", src="@loader", color="1 0 0 1")
+
+
+				##########################################
+				# Actuator Model	 					 #
+				##########################################
+				actuator = rootNode.createChild('actuator')
+				e = ElasticMaterialObject(actuator, volumeMeshFileName="model/unity-s.vtk", translation=[0,0,0], rotation=[0,0,0], surfaceMeshFileName="model/unity-s.stl", collisionMesh="model/unity-s.stl", withConstrain=True, youngModulus=youngModulusFingers, poissonRatio=0.3, totalMass=0.1)
+				#e = ElasticMaterialObject(actuator, volumeMeshFileName="model/unity-s.vtk", translation=[0,0,0], rotation=[0,0,0], withConstrain=True, youngModulus=youngModulusFingers, poissonRatio=0.3, totalMass=0.1)
+				e.createObject('TetrahedronSetTopologyModifier')
+				e.createObject('TetrahedronSetTopologyAlgorithms', template='Vec3d')
+				e.createObject('TetrahedronSetGeometryAlgorithms', template='Vec3d')
+
+				# Bounding Box
+				e.createObject('BoxROI', name='boxROI', box="60 20 240 -20 -20 270", drawBoxes='true', drawSize='5', doUpdate='0')
+				e.createObject('RestShapeSpringsForceField', points='@boxROI.indices', stiffness='1e12', angularStiffness='1e12')
+
+
+				##########################################
+				# Cavity								#
+				##########################################
+				for i in range(4):
+					cavity = e.createChild('cavity'+str(i+1))
+					file_name = 'model/cavity' + str(i+1) + '.stl'
+					#cavity.createObject('MeshSTLLoader', name='loader', filename=file_name,translation = "0 0 0",rotation="0 0 0")
+					cavity.createObject('MeshSTLLoader', name='loader', filename=file_name)
+					cavity.createObject('Mesh', src='@loader', name='topo')
+					cavity.createObject('MechanicalObject', name='cavity')
+					cavity.createObject('SurfacePressureConstraint', name="SurfacePressureConstraint", template='Vec3d', value="0.0001", triangles='@topo.triangles', drawPressure='0', drawScale='0.0002', valueType="pressure")
+					cavity.createObject('BarycentricMapping', name='mapping',  mapForces='false', mapMasses='false')
+
+				return rootNode

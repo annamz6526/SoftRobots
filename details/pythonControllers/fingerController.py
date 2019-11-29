@@ -13,7 +13,7 @@ class controller(Sofa.PythonScriptController):
 
             self.node = node
             self.finger1Node=self.node.getChild('actuator')
-            self.pressureConstraint1Node = self.finger1Node.getChild('cavity')
+            self.pressureConstraint1Node = self.finger1Node.getChild('cavity1')
 
     def onKeyPressed(self,c):
             self.dt = self.node.findData('dt').value
@@ -25,6 +25,7 @@ class controller(Sofa.PythonScriptController):
 
             if ord(c)==90:
                 pressureValue = self.pressureConstraint1.findData('value').value[0][0] + 0.01
+                print("pressureValue: ", pressureValue)
                 if pressureValue > 1.5:
                     pressureValue = 1.5
                 self.pressureConstraint1.findData('value').value = str(pressureValue)

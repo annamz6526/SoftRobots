@@ -3,6 +3,11 @@
 import Sofa
 import math
 import socket
+from pynput.keyboard import Key, Controller
+import time
+import os
+
+keyboard = Controller()
 
 
 def moveRestPos(rest_pos, dx, dy, dz):
@@ -32,11 +37,12 @@ class controller(Sofa.PythonScriptController):
     def initGraph(self, node):
 
             self.node = node
+            self.index = 0
             self.actuator1Node=self.node.getChild('actuator1')
             self.actuator2Node=self.node.getChild('actuator2')
             self.pressureConstraint1Node = self.actuator1Node.ElasticMaterialObject.getChild('cavity')
             self.pressureConstraint2Node = self.actuator2Node.ElasticMaterialObject.getChild('cavity')
-
+            self.pathName = '/home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/bin'
             self.centerPosY = 70
             self.centerPosZ = 0
             self.rotAngle = 0
@@ -157,15 +163,44 @@ class controller(Sofa.PythonScriptController):
                 self.rotAngle = self.rotAngle - math.pi/16
 
 
-    def onBeginAnimationStep(self, dt):
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        sock.connect(('0.0.0.0',7777))
+    def onEndAnimationStep(self, dt):
+        #sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        #sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        #sock.connect(('0.0.0.0',7777))
 
-        sock.send('I am here')
-        ack = sock.recv(1024)
-        print(ack)
-        sock.close()
+        #sock.send('I am here')
+        #ack = sock.recv(1024)
+        #print(ack)
+        #sock.close()
+
+        # Save screenshots
+        index = self.index
+        #if (index % 4 == 0):
+        #     filename = os.path.join(self.pathName, 's' + str(index) +'.jpg')
+        #     while not (os.path.isfile(filename)):
+        #         print(os.path.isfile(filename))
+        #         keyboard.press('s')
+        #         keyboard.release('s')
+        #         time.sleep(1)
+        #         keyboard.type(str(index))
+        #         time.sleep(1)
+        #         keyboard.press(Key.enter)
+        #         keyboard.release(Key.enter)
+        #         time.sleep(1)
+        #         keyboard.press(Key.enter)
+        #         keyboard.release(Key.enter)
+        #         time.sleep(1)
+        #     # filename = os.path.join(self.pathName, 's' + str(self.index) +'.jpg')
+        #     # while not (os.path.isfile(filename)):
+        #     #     time.sleep(1)
+        # time.sleep(5)
+        path = "/home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/screenshots"
+        command = "mv /home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/screenshots/* /home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/new_screenshots/" + str(index) + ".png"
+        os.system(command)
+
+        self.index = self.index + 1
+        print("index: ", self.index)
+        # print("dt: ", dt)
         return
 
 
