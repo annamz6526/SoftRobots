@@ -9,7 +9,7 @@ from splib.numerics import vec3
 from stlib.scene import Scene, Interaction
 
 
-youngModulusFingers = 200
+youngModulusFingers = 500
 youngModulusStiffLayerFingers = 1500
 
 
@@ -22,8 +22,9 @@ def createScene(rootNode):
 				rootNode.createObject('RequiredPlugin', name='SofaPython', pluginName='SofaPython')
 
 				rootNode.createObject('VisualStyle', displayFlags='showVisualModels hideBehaviorModels hideCollisionModels hideBoundingCollisionModels hideForceFields showInteractionForceFields hideWireframe')
-				rootNode.findData('gravity').value='0 -9810 0';
-				rootNode.findData('dt').value='0.02';
+				#rootNode.findData('gravity').value='0 -9810 0';
+				rootNode.findData('gravity').value='0 0 0';
+				rootNode.findData('dt').value='0.01';
 				rootNode.createObject('FreeMotionAnimationLoop')
 				rootNode.createObject('GenericConstraintSolver', tolerance="1e-5", maxIterations="1000")
 				rootNode.createObject('CollisionPipeline', verbose="0")
@@ -37,38 +38,90 @@ def createScene(rootNode):
 				rootNode.createObject('PythonScriptController', filename="pythonControllers/new_controller.py", classname="controller")
 
 				planeNode = rootNode.createChild('Plane')
-				planeNode.createObject('MeshObjLoader', name='loader', filename="data/mesh/floorFlat.obj", triangulate="true", rotation="0 0 0", scale=13, translation="0 -50 0")
+				planeNode.createObject('MeshObjLoader', name='loader', filename="data/mesh/floorFlat.obj", triangulate="true", rotation="0 0 0", scale=13, translation="0 -30 0")
 				planeNode.createObject('Mesh', src="@loader")
 				planeNode.createObject('MechanicalObject', src="@loader")
-				planeNode.createObject('Triangle', simulated="0", moving="0")
-				planeNode.createObject('Line', simulated="0", moving="0")
-				planeNode.createObject('Point', simulated="0", moving="0")
-				planeNode.createObject('OglModel',name="Visual", src="@loader", color="1 0 0 1")
+				planeNode.createObject('OglModel', name="Visual", src="@loader", color="1 0 0 1")
+				#planeNode.createObject('Triangle', simulated="0", moving="0")
+				#planeNode.createObject('Line', simulated="0", moving="0")
+				#planeNode.createObject('Point', simulated="0", moving="0")
+	
+				cube = rootNode.createChild('cube')
+				cube.createObject('EulerImplicit', name='odesolver')
+				cube.createObject('SparseLDLSolver', name='linearSolver')
+				cube.createObject('MechanicalObject', template="Rigid3d", position='0 5 -90 0 0 0 0')
+				cube.createObject('UniformMass', totalMass='0.1')
+				cube.createObject('UncoupledConstraintCorrection')
+
+				#collision
+				cubeCollis = cube.createChild('cubeCollis')
+				cubeCollis.createObject('MeshObjLoader', name="loader", filename="data/mesh/smCube27.obj", triangulate="true",  scale="6")
+				cubeCollis.createObject('Mesh', src="@loader")
+				cubeCollis.createObject('MechanicalObject')
+				cubeCollis.createObject('Triangle')
+				cubeCollis.createObject('Line')
+				cubeCollis.createObject('Point')
+				cubeCollis.createObject('RigidMapping')
+
+				#visualization
+				cubeVisu = cube.createChild('cubeVisu')
+				cubeVisu.createObject('MeshObjLoader', name="loader", filename="data/mesh/smCube27.obj")
+				cubeVisu.createObject('OglModel', name="Visual", src="@loader", color="0.0 0.1 0.5", scale="6")
+				# If there is no RIgidMapping, the position of visu will be at the position of Mesh
+				cubeVisu.createObject('RigidMapping')
 
 
 				##########################################
 				# Actuator Model	 					 #
 				##########################################
 				actuator = rootNode.createChild('actuator')
-				e = ElasticMaterialObject(actuator, volumeMeshFileName="model/unity.vtk", translation=[0,0,0], rotation=[0,0,0], surfaceMeshFileName="model/unity-s.stl", collisionMesh="model/unity-s.stl", withConstrain=True, youngModulus=youngModulusFingers, poissonRatio=0.3, totalMass=0.1)
-				#e = ElasticMaterialObject(actuator, volumeMeshFileName="model/unity.vtk", translation=[0,0,0], rotation=[0,0,0], withConstrain=True, youngModulus=youngModulusFingers, poissonRatio=0.3, totalMass=0.1)
+				e = ElasticMaterialObject(actuator, volumeMeshFileName="model/unity-s.vtk", translation=[0,0,0], rotation=[0,0,0], surfaceMeshFileName="model/unity-s.stl", collisionMesh="model/collision.stl", withConstrain=True, youngModulus=youngModulusFingers, poissonRatio=0.3, totalMass=0.1)
+				#e = ElasticMaterialObject(actuator, volumeMeshFileName="model/unity-s.vtk", translation=[0,0,0], rotation=[0,0,0], withConstrain=True, youngModulus=youngModulusFingers, poissonRatio=0.3, totalMass=0.1)
+
 				e.createObject('TetrahedronSetTopologyModifier')
 				e.createObject('TetrahedronSetTopologyAlgorithms', template='Vec3d')
 				e.createObject('TetrahedronSetGeometryAlgorithms', template='Vec3d')
 
+				e.createObject('BoxROI', name='ProjectToPlane', box=" 200 15 200 -200 -15 -200 ", drawBoxes='1', drawSize='1')
+				#e.createObject('ProjectToPlaneConstraint', normal='1 0 0', indices=e.dofs.indices, drawSize='0.1')
+				#e.createObject('BoxConstraint', drawSize='0.03')
+
+
 				# Bounding Box
-				e.createObject('BoxROI', name='boxROI', box="60 20 240 -20 -20 270", drawBoxes='true', drawSize='5', doUpdate='0')
+				e.createObject('BoxROI', name='boxROI', box="60 13 157 -20 -13 153", drawBoxes='true', drawSize='1', doUpdate='0')
 				e.createObject('RestShapeSpringsForceField', points='@boxROI.indices', stiffness='1e12', angularStiffness='1e12')
+
+				# Stiff layer
+				e.createObject('BoxROI', name='boxROISubTopo', box="60 13 157 -20 -13 153", drawBoxes='true', drawSize='1')
+				e.createObject('LinearSolverConstraintCorrection', name="LinearSolverConstraintCorrection")
+				modelSubTopo = e.createChild('modelSubTopo')
+				modelSubTopo.createObject('TetrahedronSetTopologyContainer', position='@loader.position', tetrahedra="@boxROISubTopo.tetrahedraInROI", name='container')
+				modelSubTopo.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus=str(youngModulusStiffLayerFingers-youngModulusFingers))
+
+
+				e.createObject('BoxROI', name='boxROISubTopo2', box="60 13 57 -20 -13 53", drawBoxes='true', drawSize='1')
+				e.createObject('LinearSolverConstraintCorrection', name="LinearSolverConstraintCorrection")
+				modelSubTopo2 = e.createChild('modelSubTopo2')
+				modelSubTopo2.createObject('TetrahedronSetTopologyContainer', position='@loader.position', tetrahedra="@boxROISubTopo2.tetrahedraInROI", name='container')
+				modelSubTopo2.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus=str(youngModulusStiffLayerFingers-youngModulusFingers))
+
+
+				e.createObject('BoxROI', name='boxROISubTopo3', box="60 13 -41 -20 -13 -45", drawBoxes='true', drawSize='1')
+				e.createObject('LinearSolverConstraintCorrection', name="LinearSolverConstraintCorrection")
+				modelSubTopo3 = e.createChild('modelSubTopo3')
+				modelSubTopo3.createObject('TetrahedronSetTopologyContainer', position='@loader.position', tetrahedra="@boxROISubTopo3.tetrahedraInROI", name='container')
+				modelSubTopo3.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus=str(youngModulusStiffLayerFingers-youngModulusFingers))
+
 
 
 				##########################################
 				# Cavity								#
 				##########################################
-				for i in range(1):
+				for i in range(4):
 					cavity = e.createChild('cavity'+str(i+1))
 					file_name = 'model/cavity' + str(i+1) + '.stl'
-					#cavity.createObject('MeshSTLLoader', name='loader', filename=file_name,translation = "0 0 0",rotation="0 0 0")
-					cavity.createObject('MeshSTLLoader', name='loader', filename="model/cavity1.stl", translation = "0 0 0",rotation="0 0 0")
+					cavity.createObject('MeshSTLLoader', name='loader', filename=file_name)
+					#cavity.createObject('MeshSTLLoader', name='loader', filename="model/cavity1.stl")
 					cavity.createObject('Mesh', src='@loader', name='topo')
 					cavity.createObject('MechanicalObject', name='cavity')
 					cavity.createObject('SurfacePressureConstraint', name="SurfacePressureConstraint", template='Vec3d', value="0.0001", triangles='@topo.triangles', drawPressure='0', drawScale='0.0002', valueType="pressure")
