@@ -7,3 +7,8 @@
 
 --- NEW SESSION: 28/11/2019 18:13:51 ---
 /actuator/ElasticMaterialObject/boxROI.drawSize = 7.15
+
+--- NEW SESSION: 28/11/2019 23:31:39 ---
+/actuator/ElasticMaterialObject/cavity1/SurfacePressureConstraint.constraintIndex = 0
+/actuator/ElasticMaterialObject/cavity1/SurfacePressureConstraint.pressure = 0.3001
+/actuator/ElasticMaterialObject/cavity1/SurfacePressureConstraint.volumeGrowth = 1.33235e-06

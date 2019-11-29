@@ -3,11 +3,8 @@
 import Sofa
 import math
 import socket
-from pynput.keyboard import Key, Controller
 import time
 import os
-
-keyboard = Controller()
 
 
 def moveRestPos(rest_pos, dx, dy, dz):
@@ -39,8 +36,8 @@ class controller(Sofa.PythonScriptController):
             self.node = node
             self.index = 0
             self.actuatorNode=self.node.getChild('actuator')
-            self.pressureConstraint1Node = self.actuatorNode.ElasticMaterialObject.getChild('cavity3')
-            self.pressureConstraint2Node = self.actuatorNode.ElasticMaterialObject.getChild('cavity4')
+            self.pressureConstraint1Node = self.actuatorNode.ElasticMaterialObject.getChild('cavity1')
+            #self.pressureConstraint2Node = self.actuatorNode.ElasticMaterialObject.getChild('cavity4')
             self.centerPosY = 70
             self.centerPosZ = 0
             self.rotAngle = 0
@@ -53,7 +50,7 @@ class controller(Sofa.PythonScriptController):
             self.MecaObject2=self.actuatorNode.ElasticMaterialObject.getObject('dofs');
 
             self.pressureConstraint1 = self.pressureConstraint1Node.getObject('SurfacePressureConstraint')
-            self.pressureConstraint2 = self.pressureConstraint2Node.getObject('SurfacePressureConstraint')
+            #self.pressureConstraint2 = self.pressureConstraint2Node.getObject('SurfacePressureConstraint')
 
             #if (c == "Z"):
             if ord(c)==90:
@@ -62,18 +59,18 @@ class controller(Sofa.PythonScriptController):
                 if pressureValue > 1:
                     pressureValue = 1
                 self.pressureConstraint1.findData('value').value = str(pressureValue)
-                pressureValue = self.pressureConstraint2.findData('value').value[0][0] - 0.01
-                if pressureValue < 0:
-                    pressureValue = 0
-                self.pressureConstraint2.findData('value').value = str(pressureValue)
+                # pressureValue = self.pressureConstraint2.findData('value').value[0][0] - 0.01
+                # if pressureValue < 0:
+                #     pressureValue = 0
+                # self.pressureConstraint2.findData('value').value = str(pressureValue)
 
             #if (c == "X"):
             if ord(c)==88:
                 print 'right'
-                pressureValue = self.pressureConstraint2.findData('value').value[0][0] + 0.01
-                if pressureValue > 1:
-                    pressureValue = 1
-                self.pressureConstraint2.findData('value').value = str(pressureValue)
+                # pressureValue = self.pressureConstraint2.findData('value').value[0][0] + 0.01
+                # if pressureValue > 1:
+                #     pressureValue = 1
+                # self.pressureConstraint2.findData('value').value = str(pressureValue)
                 pressureValue = self.pressureConstraint1.findData('value').value[0][0] - 0.01
                 if pressureValue < 0:
                     pressureValue = 0
@@ -175,8 +172,8 @@ class controller(Sofa.PythonScriptController):
         command = "mv /home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/screenshots/* /home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/new_screenshots/" + str(index) + ".png"
         #os.system(command)
 
-        self.index = self.index + 1
-        print("index: ", self.index)
+        #self.index = self.index + 1
+        #print("index: ", self.index)
         # print("dt: ", dt)
         return
 
