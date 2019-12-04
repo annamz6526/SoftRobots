@@ -1,5 +1,3 @@
-import socket
-import json
 import numpy as np
 import random
 from env import ENV
@@ -11,17 +9,9 @@ from collections import deque
 
 actions = ['top_left', 'top_right','top_up', 'top_down', 'bottom_left', 'bottom_right', 'bottom_up', 'bottom_down']
 
-# data = [
-#     'img_name':,
-#     'reward':,
-#
-# ]
-
-
-
 
 class DQN:
-    def __init__(self, env, batch_size):
+    def __init__(self, env, batch_size = 32):
         self.env = env
         self.memory = deque(maxlen=2000)
         self.batch_size = batch_size
@@ -38,7 +28,7 @@ class DQN:
 
     def create_model(self):
         model = Sequential()
-        state_shape = self.env.state_shape
+        state_shape = self.env.img_size
 
         model.add(Conv2D(32, (3, 3), padding='same',
                          input_shape=state_shape.shape))
@@ -100,7 +90,7 @@ class DQN:
 
 
 # def main():
-#     env = gym.make("MountainCar-v0")
+#     env = ENV()
 #     gamma = 0.9
 #     epsilon = .95
 #
@@ -134,7 +124,4 @@ class DQN:
 #             print("Completed in {} trials".format(trial))
 #             dqn_agent.save_model("success.model")
 #             break
-
-
-# if __name__ == "__main__":
-#     # main()
+#

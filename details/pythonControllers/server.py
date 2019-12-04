@@ -46,14 +46,14 @@ def listenToEnv(server_addr):
 			print(data)
 			data = {
 				'imgName' : 'haha',
-				'reward' : 2
+				'reward' : 1.332
 			}
 			sendMessageOnly(sock, data, addr[0], addr[1])
 			pass
 		elif state == 'step':
 			print(data)
 			pass
-			
+
 		else:
 			pass
 
