@@ -38,7 +38,7 @@ def createScene(rootNode):
 				rootNode.createObject('PythonScriptController', filename="pythonControllers/new_controller.py", classname="controller")
 
 				planeNode = rootNode.createChild('Plane')
-				planeNode.createObject('MeshObjLoader', name='loader', filename="data/mesh/floorFlat.obj", triangulate="true", rotation="0 0 0", scale=13, translation="0 -30 0")
+				planeNode.createObject('MeshObjLoader', name='loader', filename="data/mesh/floorFlat.obj", triangulate="true", rotation="0 0 0", scale=13, translation="0 -25 0")
 				planeNode.createObject('Mesh', src="@loader")
 				planeNode.createObject('MechanicalObject', src="@loader")
 				planeNode.createObject('OglModel', name="Visual", src="@loader", color="1 0 0 1")
@@ -49,13 +49,13 @@ def createScene(rootNode):
 				cube = rootNode.createChild('cube')
 				cube.createObject('EulerImplicit', name='odesolver')
 				cube.createObject('SparseLDLSolver', name='linearSolver')
-				cube.createObject('MechanicalObject', template="Rigid3d", position='0 5 -90 0 0 0 0')
+				cube.createObject('MechanicalObject', template="Rigid3d", position='15 0 -70 0 0 0 0')
 				cube.createObject('UniformMass', totalMass='0.1')
 				cube.createObject('UncoupledConstraintCorrection')
 
 				#collision
 				cubeCollis = cube.createChild('cubeCollis')
-				cubeCollis.createObject('MeshObjLoader', name="loader", filename="data/mesh/smCube27.obj", triangulate="true",  scale="6")
+				cubeCollis.createObject('MeshObjLoader', name="loader", filename="data/mesh/smCube27.obj", triangulate="true",  scale="0.5")
 				cubeCollis.createObject('Mesh', src="@loader")
 				cubeCollis.createObject('MechanicalObject')
 				cubeCollis.createObject('Triangle')
@@ -66,7 +66,7 @@ def createScene(rootNode):
 				#visualization
 				cubeVisu = cube.createChild('cubeVisu')
 				cubeVisu.createObject('MeshObjLoader', name="loader", filename="data/mesh/smCube27.obj")
-				cubeVisu.createObject('OglModel', name="Visual", src="@loader", color="0.0 0.1 0.5", scale="6")
+				cubeVisu.createObject('OglModel', name="Visual", src="@loader", color="0.0 0.1 0.5", scale="0.5")
 				# If there is no RIgidMapping, the position of visu will be at the position of Mesh
 				cubeVisu.createObject('RigidMapping')
 
@@ -85,7 +85,6 @@ def createScene(rootNode):
 				e.createObject('BoxROI', name='ProjectToPlane', box=" 200 15 200 -200 -15 -200 ", drawBoxes='1', drawSize='1')
 				#e.createObject('ProjectToPlaneConstraint', normal='1 0 0', indices=e.dofs.indices, drawSize='0.1')
 				#e.createObject('BoxConstraint', drawSize='0.03')
-
 
 				# Bounding Box
 				e.createObject('BoxROI', name='boxROI', box="60 13 157 -20 -13 153", drawBoxes='true', drawSize='1', doUpdate='0')
