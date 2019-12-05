@@ -1,5 +1,7 @@
 import socket
 from env import ENV
+from dqn import DQN
+import cv2
 # import numpy as np
 # import random
 # from keras.models import Sequential
@@ -16,10 +18,51 @@ from env import ENV
 actions = ['top_left', 'top_right','top_up', 'top_down', 'bottom_left', 'bottom_right', 'bottom_up', 'bottom_down']
 
 def main():
-    env = ENV(actions, (0,0,0))
+    # env = ENV(actions, (224, 224))
+    # gamma = 0.9
+    # epsilon = .95
+    #
+    # trials = 1000
+    # trial_len = 500
+    #
+    # # updateTargetNetwork = 1000
+    # dqn_agent = DQN(env=env)
+    # steps = []
+    # for trial in range(trials):
+    #     cur_state = env.reset()
+    #     for step in range(trial_len):
+    #         action = dqn_agent.act(cur_state)
+    #         new_state, reward, done = env.step(action)
+    #
+    #         # reward = reward if not done else -20
+    #         new_state = new_state
+    #         dqn_agent.remember(cur_state, action, reward, new_state, done)
+    #
+    #         dqn_agent.replay()  # internally iterates default (prediction) model
+    #         dqn_agent.target_train()  # iterates target model
+    #
+    #         cur_state = new_state
+    #         if done:
+    #             break
+    #     if step >= 199:
+    #         print("Failed to complete in trial {}".format(trial))
+    #         if step % 10 == 0:
+    #             dqn_agent.save_model("trial-{}.model".format(trial))
+    #     else:
+    #         print("Completed in {} trials".format(trial))
+    #         dqn_agent.save_model("success.model")
+    #         break
+    env = ENV(actions, (224, 224))
+    fn = 'test_data/1.jpg'
+    resized_img = env.img_loader(fn)
+    print(resized_img)
+    cv2.imshow('img', resized_img)
+
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
     env.reset()
-    env.sample_action()
-    env.step(2)
+    print(env.sample_action())
+    # env.step(2)
 
 
 

@@ -49,7 +49,7 @@ def listenToEnv(server_addr):
 			print(data)
 			data = {
 				'imgName' : 'haha',
-				'reward' : 2
+				'reward' : 1.332
 			}
 			sendMessageOnly(sock, data, addr[0], addr[1])
 			pass
@@ -63,7 +63,6 @@ def listenToEnv(server_addr):
 			}
 			sendMessageOnly(sock, data, addr[0], addr[1])
 			break
-			
 		else:
 			pass
 	sock.close()
