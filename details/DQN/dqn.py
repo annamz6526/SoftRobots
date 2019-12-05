@@ -58,6 +58,7 @@ class DQN:
     def act(self, state):
         self.epsilon *= self.epsilon_decay
         self.epsilon = max(self.epsilon_min, self.epsilon)
+        print('eps: ', self.epsilon)
         if np.random.random() < self.epsilon:
             return self.env.sample_action()
         return np.argmax(self.model.predict(state)[0])
@@ -78,7 +79,7 @@ class DQN:
             else:
                 Q_future = max(self.target_model.predict(new_state)[0])
                 target[0][action] = reward + Q_future * self.gamma
-            self.model.fit(state, target, epochs=1, verbose=0)
+            self.model.fit(state, target, epochs=1, verbose=1)
 
     def target_train(self):
         weights = self.model.get_weights()

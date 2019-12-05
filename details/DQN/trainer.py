@@ -31,7 +31,6 @@ def main():
 	for trial in range(trials):
 		cur_state = env.reset()
 		for step in range(trial_len):
-			print(cur_state.shape)
 			action = dqn_agent.act(cur_state)
 			new_state, reward, done = env.step(action)
 	
