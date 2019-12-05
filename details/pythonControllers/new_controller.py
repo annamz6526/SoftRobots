@@ -23,31 +23,37 @@ class controller(Sofa.PythonScriptController):
             keyboard.press('v')
             keyboard.release('v')
         node.getRootContext().animate = True
+        server_addr = ('', 7777)
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.sock.bind((server_addr))
 
     def listenToEnv(self, server_addr):
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        sock.bind((server_addr))
+        # sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        # sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        # sock.bind((server_addr))
+        print("here")
         while True:
-            received, addr = sock.recvfrom(1024)
+            received, addr = self.sock.recvfrom(1024)
             data = json.loads(received.decode('utf-8'))
             state = data['state']
             if state == 'reset':
                 #TODO reset and send image 
                 print(data)
-                self.index = 0
+                # self.index = 0
                 self.lastGoalDistance = 0
                 self.avgGoalDelta = 0
                 self.rewardHistory = 0
                 self.collision = False
-                self.episode = self.episode + 1
                 self.node.reset()
                 data = {
                     'imgName' : '/home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/new_screenshots/' + str(self.episode) + "_" + str(self.index) + '.png',
                     'reward' : None
                 }
                 print(data)
-                sendMessageOnly(sock, data, addr[0], addr[1])
+                sendMessageOnly(self.sock, data, addr[0], addr[1])
+                self.episode = self.episode + 1
+                self.index = 0
                 break
             elif state == 'step':
                 #TODO actions and send image 
@@ -59,12 +65,12 @@ class controller(Sofa.PythonScriptController):
                     'reward' : self.rewardHistory,
                     'done' : self.endEpisode
                 }
-                sendMessageOnly(sock, data, addr[0], addr[1])
+                sendMessageOnly(self.sock, data, addr[0], addr[1])
                 break
                 
             else:
                 pass
-        sock.close()
+        # sock.close()
 
     def initGraph(self, node):
         self.node = node
@@ -178,57 +184,19 @@ class controller(Sofa.PythonScriptController):
 
 
     def onEndAnimationStep(self, dt):
-
-        # position of the middle point
-        nodePos = self.actuatorNode.ElasticMaterialObject.getObject('dofs').position[665]
-        nodePosX = nodePos[0]
-        nodePosY = nodePos[1]
-        nodePosZ = nodePos[2]
-        #print("nodePos: ", nodePosX, nodePosY, nodePosZ)
-
-        # position of the cube
-        cubePos=self.cubeNode.MechanicalObject.findData('position').value;
-        cubePosX = cubePos[0][0]
-        cubePosY = cubePos[0][1]
-        cubePosZ = cubePos[0][2]
-        #print("cube position: ", cubePosX, cubePosY, cubePosZ)
-
-        # distance
-        distGoal = (cubePosX - nodePosX)**2 + (cubePosZ - nodePosZ)**2;
-        distGoal = math.sqrt(distGoal)
-        #print("distGoal: ", distGoal)
-
-        # collision detection
-        if (distGoal < 5):
-            self.collision = True
-            self.endEpisode = True
-
-        # interim rewards
-        alpha = 0.3
-        REWARD_MULT = 200
-        
-        if self.index > 1:
-            distDelta = self.lastGoalDistance - distGoal;
-            self.avgGoalDelta = (self.avgGoalDelta * alpha) + (distDelta * (1.0 - alpha));
-            self.lastGoalDistance = distGoal;
-
-        if self.collision:
-            self.rewardHistory = 500
-        else:
-            self.rewardHistory = self.avgGoalDelta * REWARD_MULT
-        #print("rewardHistory: ", self.rewardHistory)
-
-        server_addr = ('', 7777)
-        self.listenToEnv(server_addr)
-
         # Save screenshots
         #path = "/home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/screenshots"
-        if self.index == 0:
-            #command = "rm /home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/screenshots/*"
-        else:
+        #if self.index == 0:
+        #    command = "rm /home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/screenshots/*"
+        #else:
+        if self.index > 0:
             command = "mv /home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/screenshots/* /home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/new_screenshots/" + str(self.episode) + "_" + str(self.index) + ".png"
-        print("command: " ,command)
-        os.system(command)
+            print("command: " ,command)
+            os.system(command)
+
+        if self.index > 0:
+            server_addr = ('', 7777)
+            self.listenToEnv(server_addr)
 
         self.index = self.index + 1
         print("index: ", self.index)
@@ -320,3 +288,44 @@ class controller(Sofa.PythonScriptController):
             if pressureValue < bottom:
                 pressureValue = bottom
             self.pressureConstraint2.findData('value').value = str(pressureValue)
+
+        # position of the middle point
+        nodePos = self.actuatorNode.ElasticMaterialObject.getObject('dofs').position[665]
+        nodePosX = nodePos[0]
+        nodePosY = nodePos[1]
+        nodePosZ = nodePos[2]
+        #print("nodePos: ", nodePosX, nodePosY, nodePosZ)
+
+        # position of the cube
+        cubePos=self.cubeNode.MechanicalObject.findData('position').value;
+        cubePosX = cubePos[0][0]
+        cubePosY = cubePos[0][1]
+        cubePosZ = cubePos[0][2]
+        #print("cube position: ", cubePosX, cubePosY, cubePosZ)
+
+        # distance
+        distGoal = (cubePosX - nodePosX)**2 + (cubePosZ - nodePosZ)**2;
+        distGoal = math.sqrt(distGoal)
+        #print("distGoal: ", distGoal)
+
+        # collision detection
+        if (distGoal < 5):
+            self.collision = True
+            self.endEpisode = True
+
+        # interim rewards
+        alpha = 0.3
+        REWARD_MULT = 200
+        
+        print("index: ", self.index)
+        if self.index > 0:
+            distDelta = self.lastGoalDistance - distGoal;
+            print("distDelta: ", distDelta)
+            self.avgGoalDelta = (self.avgGoalDelta * alpha) + (distDelta * (1.0 - alpha));
+            self.lastGoalDistance = distGoal;
+
+        if self.collision:
+            self.rewardHistory = 500
+        else:
+            self.rewardHistory = self.avgGoalDelta * REWARD_MULT
+        print("rewardHistory: ", self.rewardHistory)

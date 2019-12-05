@@ -35,7 +35,7 @@ class ENV(object):
         self.sendMessageOnly(data, '0.0.0.0', 7777)
         received, addr = self.sock.recvfrom(1024)
         data = json.loads(received.decode('utf-8'))
-        state = self.img_loader(data['imgName'])
+        state = (self.img_loader(data['imgName']))
 
         return state, data['reward'], data['done']
 
@@ -46,7 +46,8 @@ class ENV(object):
         self.sendMessageOnly(data, '0.0.0.0', 7777)
         received, addr = self.sock.recvfrom(1024)
         data = json.loads(received.decode('utf-8'))
-        state = self.img_loader(data['imgName'])
+        state = (self.img_loader(data['imgName']))
+
         return state
 
     def img_loader(self, fn):
@@ -54,4 +55,5 @@ class ENV(object):
         resized_img = cv2.resize(image, self.img_size)
         gray = cv2.cvtColor(resized_img, cv2.COLOR_BGR2GRAY)
         gray = gray.astype('float32') / 255
+        gray = gray.reshape(-1, self.img_size[0], self.img_size[1], 1)
         return gray

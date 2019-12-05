@@ -31,7 +31,7 @@ class DQN:
         state_shape = self.env.img_size
 
         model.add(Conv2D(32, (3, 3), padding='same',
-                         input_shape=state_shape.shape))
+                         input_shape=(state_shape[0], state_shape[1], 1)))
         model.add(Activation('relu'))
         model.add(Conv2D(32, (3, 3)))
         model.add(Activation('relu'))
@@ -51,6 +51,8 @@ class DQN:
         model.add(Dense(len(self.env.action_space)))
         model.compile(loss="mean_squared_error",
                       optimizer=Adam(lr=self.learning_rate))
+
+        print(model.summary())
         return model
 
     def act(self, state):
@@ -88,40 +90,3 @@ class DQN:
     def save_model(self, fn):
         self.model.save(fn)
 
-
-# def main():
-#     env = ENV()
-#     gamma = 0.9
-#     epsilon = .95
-#
-#     trials = 1000
-#     trial_len = 500
-#
-#     # updateTargetNetwork = 1000
-#     dqn_agent = DQN(env=env)
-#     steps = []
-#     for trial in range(trials):
-#         cur_state = env.reset().reshape(1, 2)
-#         for step in range(trial_len):
-#             action = dqn_agent.act(cur_state)
-#             new_state, reward, done, _ = env.step(action)
-#
-#             # reward = reward if not done else -20
-#             new_state = new_state.reshape(1, 2)
-#             dqn_agent.remember(cur_state, action, reward, new_state, done)
-#
-#             dqn_agent.replay()  # internally iterates default (prediction) model
-#             dqn_agent.target_train()  # iterates target model
-#
-#             cur_state = new_state
-#             if done:
-#                 break
-#         if step >= 199:
-#             print("Failed to complete in trial {}".format(trial))
-#             if step % 10 == 0:
-#                 dqn_agent.save_model("trial-{}.model".format(trial))
-#         else:
-#             print("Completed in {} trials".format(trial))
-#             dqn_agent.save_model("success.model")
-#             break
-#
