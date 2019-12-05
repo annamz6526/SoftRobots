@@ -3,6 +3,7 @@ from env import ENV
 from dqn import DQN
 import cv2
 import numpy as np
+import os
 # import random
 # from keras.models import Sequential
 # from keras.layers import Dense, Dropout
@@ -21,7 +22,9 @@ def main():
 	env = ENV(actions, (224, 224))
 	gamma = 0.9
 	epsilon = .95
-	
+	model_ph = 'models'
+	if not os.path.exits(model_ph):
+		os.path.mkdir(model_ph)
 	trials = 1000
 	trial_len = 500
 	
@@ -47,10 +50,10 @@ def main():
 		if step >= 199:
 			print("Failed to complete in trial {}".format(trial))
 			if step % 10 == 0:
-				dqn_agent.save_model("trial-{}.model".format(trial))
+				dqn_agent.save_model(os.path.join(model_ph, "trial-{}.model").format(trial))
 		else:
 			print("Completed in {} trials".format(trial))
-			dqn_agent.save_model("success.model")
+			dqn_agent.save_model(os.path.join(model_ph, "success.model"))
 			break
 	# Test
 	# env = ENV(actions, (224, 224))
