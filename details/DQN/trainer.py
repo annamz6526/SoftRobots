@@ -53,6 +53,7 @@ def main():
 			print("Completed in {} trials".format(trial))
 			dqn_agent.save_model("success.model")
 			break
+	# Test
 	# env = ENV(actions, (224, 224))
 	# # fn = 'test_data/1.jpg'
 	# # resized_img = env.img_loader(fn)
