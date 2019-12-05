@@ -24,11 +24,12 @@ import threading
 # 		continue
 
 
-# data = {
-# 	'state': 'init', #string
+# received = {
+# 	'state': 'reset', #string
 # 	'action': 1, #int
 #
 # }
+
 def sendMessageOnly(sock, msg, ip, port):
         msg = json.dumps(msg).encode('utf-8')
         sock.sendto(msg, (ip, port))
@@ -43,6 +44,8 @@ def listenToEnv(server_addr):
 		data = json.loads(received.decode('utf-8'))
 		state = data['state']
 		if state == 'reset':
+			#TODO reset and send image 
+
 			print(data)
 			data = {
 				'imgName' : 'haha',
@@ -51,12 +54,19 @@ def listenToEnv(server_addr):
 			sendMessageOnly(sock, data, addr[0], addr[1])
 			pass
 		elif state == 'step':
+			#TODO actions and send image 
+
 			print(data)
-			pass
+			data = {
+				'imgName' : 'haha',
+				'reward' : 2
+			}
+			sendMessageOnly(sock, data, addr[0], addr[1])
+			break
 			
 		else:
 			pass
-
+	sock.close()
 
 
 

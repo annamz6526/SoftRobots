@@ -6,30 +6,86 @@ import socket
 import time
 import os
 import math
+import json
+from pynput.keyboard import Key, Controller
 
+keyboard = Controller()
+actions = ['top_left', 'top_right','top_up', 'top_down', 'bottom_left', 'bottom_right', 'bottom_up', 'bottom_down']
+
+def sendMessageOnly(sock, msg, ip, port):
+    msg = json.dumps(msg).encode('utf-8')
+    sock.sendto(msg, (ip, port))
 
 class controller(Sofa.PythonScriptController):
 
+    def onLoaded(self, node):
+        with keyboard.pressed(Key.shift):
+            keyboard.press('v')
+            keyboard.release('v')
+        node.getRootContext().animate = True
 
-
-
+    def listenToEnv(self, server_addr):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        sock.bind((server_addr))
+        while True:
+            received, addr = sock.recvfrom(1024)
+            data = json.loads(received.decode('utf-8'))
+            state = data['state']
+            if state == 'reset':
+                #TODO reset and send image 
+                print(data)
+                self.index = 0
+                self.lastGoalDistance = 0
+                self.avgGoalDelta = 0
+                self.rewardHistory = 0
+                self.collision = False
+                self.episode = self.episode + 1
+                self.node.reset()
+                data = {
+                    'imgName' : '/home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/new_screenshots/' + str(self.episode) + "_" + str(self.index) + '.png',
+                    'reward' : None
+                }
+                print(data)
+                sendMessageOnly(sock, data, addr[0], addr[1])
+                break
+            elif state == 'step':
+                #TODO actions and send image 
+                print(data['action'])
+                self.execute(data['action'])
+                data['action']
+                data = {
+                    'imgName' : '/home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/new_screenshots/' + str(self.episode) + "_" + str(self.index) + '.png',
+                    'reward' : self.rewardHistory,
+                    'done' : self.endEpisode
+                }
+                sendMessageOnly(sock, data, addr[0], addr[1])
+                break
+                
+            else:
+                pass
+        sock.close()
 
     def initGraph(self, node):
-
-            self.node = node
-            self.index = 0
-            self.cubeNode=self.node.getChild('cube')
-            self.actuatorNode=self.node.getChild('actuator')
-            self.pressureConstraint3Node = self.actuatorNode.ElasticMaterialObject.getChild('cavity1')
-            self.pressureConstraint4Node = self.actuatorNode.ElasticMaterialObject.getChild('cavity2')
-            self.pressureConstraint1Node = self.actuatorNode.ElasticMaterialObject.getChild('cavity3')
-            self.pressureConstraint2Node = self.actuatorNode.ElasticMaterialObject.getChild('cavity4')
-            self.lastGoalDistance = 0
-            self.avgGoalDelta = 0
-            self.rewardHistory = 0
-            self.collision = False
-            self.maxEpisodeLength =100;
-            self.endEpisode = False
+        self.node = node
+        self.index = 0
+        self.cubeNode=self.node.getChild('cube')
+        self.actuatorNode=self.node.getChild('actuator')
+        self.pressureConstraint3Node = self.actuatorNode.ElasticMaterialObject.getChild('cavity1')
+        self.pressureConstraint4Node = self.actuatorNode.ElasticMaterialObject.getChild('cavity2')
+        self.pressureConstraint1Node = self.actuatorNode.ElasticMaterialObject.getChild('cavity3')
+        self.pressureConstraint2Node = self.actuatorNode.ElasticMaterialObject.getChild('cavity4')
+        self.pressureConstraint1 = self.pressureConstraint1Node.getObject('SurfacePressureConstraint')
+        self.pressureConstraint2 = self.pressureConstraint2Node.getObject('SurfacePressureConstraint')
+        self.pressureConstraint3 = self.pressureConstraint3Node.getObject('SurfacePressureConstraint')
+        self.pressureConstraint4 = self.pressureConstraint4Node.getObject('SurfacePressureConstraint')
+        self.lastGoalDistance = 0
+        self.avgGoalDelta = 0
+        self.rewardHistory = 0
+        self.collision = False
+        #self.maxEpisodeLength =100
+        self.endEpisode = False
+        self.episode = 0
 
     def onKeyPressed(self,c):
             self.dt = self.node.findData('dt').value
@@ -45,14 +101,16 @@ class controller(Sofa.PythonScriptController):
 
 
             upper = 1
+            bottom = -1
+            pressure_change = 0.01
             #if (c == "Z"):
             if ord(c)==90:
                 print 'left'
-                pressureValue = self.pressureConstraint1.findData('value').value[0][0] + 0.01
+                pressureValue = self.pressureConstraint1.findData('value').value[0][0] + pressure_change
                 if pressureValue > upper:
                     pressureValue = upper
                 self.pressureConstraint1.findData('value').value = str(pressureValue)
-                pressureValue = self.pressureConstraint2.findData('value').value[0][0] - 0.01
+                pressureValue = self.pressureConstraint2.findData('value').value[0][0] - pressure_change
                 if pressureValue < 0:
                     pressureValue = 0
                 self.pressureConstraint2.findData('value').value = str(pressureValue)
@@ -60,11 +118,11 @@ class controller(Sofa.PythonScriptController):
             #if (c == "X"):
             if ord(c)==88:
                 print 'right'
-                pressureValue = self.pressureConstraint2.findData('value').value[0][0] + 0.01
+                pressureValue = self.pressureConstraint2.findData('value').value[0][0] + pressure_change
                 if pressureValue > upper:
                     pressureValue = upper
                 self.pressureConstraint2.findData('value').value = str(pressureValue)
-                pressureValue = self.pressureConstraint1.findData('value').value[0][0] - 0.01
+                pressureValue = self.pressureConstraint1.findData('value').value[0][0] - pressure_change
                 if pressureValue < 0:
                     pressureValue = 0
                 self.pressureConstraint1.findData('value').value = str(pressureValue)
@@ -72,11 +130,11 @@ class controller(Sofa.PythonScriptController):
             # UP key :
             if ord(c)==19:
                 print 'long'
-                pressureValue = self.pressureConstraint1.findData('value').value[0][0] + 0.01
+                pressureValue = self.pressureConstraint1.findData('value').value[0][0] + pressure_change
                 if pressureValue > upper:
                     pressureValue = upper
                 self.pressureConstraint1.findData('value').value = str(pressureValue)
-                pressureValue = self.pressureConstraint2.findData('value').value[0][0] + 0.01
+                pressureValue = self.pressureConstraint2.findData('value').value[0][0] + pressure_change
                 if pressureValue > upper:
                     pressureValue = upper
                 self.pressureConstraint2.findData('value').value = str(pressureValue)
@@ -85,50 +143,41 @@ class controller(Sofa.PythonScriptController):
             # DOWN key : rear
             if ord(c)==21:
                 print 'short'
-                pressureValue = self.pressureConstraint2.findData('value').value[0][0] - 0.01
-                if pressureValue < 0:
-                    pressureValue = 0
+                pressureValue = self.pressureConstraint2.findData('value').value[0][0] - pressure_change
+                if pressureValue < -1.2:
+                    pressureValue = -1.2
                 self.pressureConstraint2.findData('value').value = str(pressureValue)
-                pressureValue = self.pressureConstraint1.findData('value').value[0][0] - 0.01
-                if pressureValue < 0:
-                    pressureValue = 0
+                pressureValue = self.pressureConstraint1.findData('value').value[0][0] - pressure_change
+                if pressureValue < -1.2:
+                    pressureValue = -1.2
                 self.pressureConstraint1.findData('value').value = str(pressureValue)
 
             #if (c == "Q"):
             if ord(c)==81:
                 print 'left'
-                pressureValue = self.pressureConstraint3.findData('value').value[0][0] + 0.01
+                pressureValue = self.pressureConstraint3.findData('value').value[0][0] + pressure_change
                 if pressureValue > upper:
                     pressureValue = upper
                 self.pressureConstraint3.findData('value').value = str(pressureValue)
-                pressureValue = self.pressureConstraint4.findData('value').value[0][0] - 0.01
-                # if pressureValue < 0:
-                #     pressureValue = 0
+                pressureValue = self.pressureConstraint4.findData('value').value[0][0] - pressure_change
+                if pressureValue < bottom:
+                    pressureValue = bottom
                 self.pressureConstraint4.findData('value').value = str(pressureValue)
 
             #if (c == "W"):
             if ord(c)==87:
                 print 'right'
-                pressureValue = self.pressureConstraint4.findData('value').value[0][0] + 0.01
+                pressureValue = self.pressureConstraint4.findData('value').value[0][0] + pressure_change
                 if pressureValue > upper:
                     pressureValue = upper
                 self.pressureConstraint4.findData('value').value = str(pressureValue)
-                pressureValue = self.pressureConstraint3.findData('value').value[0][0] - 0.01
-                #if pressureValue < 0:
-                #    pressureValue = 0
+                pressureValue = self.pressureConstraint3.findData('value').value[0][0] - pressure_change
+                if pressureValue < bottom:
+                    pressureValue = bottom
                 self.pressureConstraint3.findData('value').value = str(pressureValue)
 
 
     def onEndAnimationStep(self, dt):
-        # Save screenshots
-        index = self.index
-        path = "/home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/screenshots"
-        command = "mv /home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/screenshots/* /home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/new_screenshots/" + str(index) + ".png"
-        #os.system(command)
-
-        self.index = self.index + 1
-        print("index: ", self.index)
-        # print("dt: ", dt)
 
         # position of the middle point
         nodePos = self.actuatorNode.ElasticMaterialObject.getObject('dofs').position[665]
@@ -158,8 +207,7 @@ class controller(Sofa.PythonScriptController):
         alpha = 0.3
         REWARD_MULT = 200
         
-
-        if index > 1:
+        if self.index > 1:
             distDelta = self.lastGoalDistance - distGoal;
             self.avgGoalDelta = (self.avgGoalDelta * alpha) + (distDelta * (1.0 - alpha));
             self.lastGoalDistance = distGoal;
@@ -170,29 +218,105 @@ class controller(Sofa.PythonScriptController):
             self.rewardHistory = self.avgGoalDelta * REWARD_MULT
         #print("rewardHistory: ", self.rewardHistory)
 
-        # update endEpisode
-        if index > self.maxEpisodeLength:
-            self.endEpisode = True
-        #print("endEpisode: ", self.endEpisode)
+        server_addr = ('', 7777)
+        self.listenToEnv(server_addr)
 
-        if self.endEpisode:
-            self.index = 0
-            self.lastGoalDistance = 0
-            self.avgGoalDelta = 0
-            self.rewardHistory = 0
-            self.collision = False
-            self.endEpisode = False
-            self.node.reset()
+        # Save screenshots
+        #path = "/home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/screenshots"
+        if self.index == 0:
+            #command = "rm /home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/screenshots/*"
+        else:
+            command = "mv /home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/screenshots/* /home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/new_screenshots/" + str(self.episode) + "_" + str(self.index) + ".png"
+        print("command: " ,command)
+        os.system(command)
 
-        #sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        #sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        #sock.connect(('0.0.0.0',7777))
+        self.index = self.index + 1
+        print("index: ", self.index)
 
-        #sock.send('I am here')
-        #ack = sock.recv(1024)
-        #print(ack)
-        #sock.close()
         return
 
+    def execute(self, action):
+        upper = 1
+        bottom = -1
+        pressure_change = 0.01
 
-  
+        if action == 0:
+            print 'top_left'
+            pressureValue = self.pressureConstraint3.findData('value').value[0][0] + pressure_change
+            if pressureValue > upper:
+                pressureValue = upper
+            self.pressureConstraint3.findData('value').value = str(pressureValue)
+            pressureValue = self.pressureConstraint4.findData('value').value[0][0] - pressure_change
+            if pressureValue < bottom:
+                pressureValue = bottom
+            self.pressureConstraint4.findData('value').value = str(pressureValue)
+        elif action == 1:
+            print 'top_right'
+            pressureValue = self.pressureConstraint4.findData('value').value[0][0] + pressure_change
+            if pressureValue > upper:
+                pressureValue = upper
+            self.pressureConstraint4.findData('value').value = str(pressureValue)
+            pressureValue = self.pressureConstraint3.findData('value').value[0][0] - pressure_change
+            if pressureValue < bottom:
+                pressureValue = bottom
+            self.pressureConstraint3.findData('value').value = str(pressureValue)
+        elif action == 2:
+            print 'top_up'
+            pressureValue = self.pressureConstraint3.findData('value').value[0][0] + pressure_change
+            if pressureValue > upper:
+                pressureValue = upper
+            self.pressureConstraint3.findData('value').value = str(pressureValue)
+            pressureValue = self.pressureConstraint4.findData('value').value[0][0] + pressure_change
+            if pressureValue > upper:
+                pressureValue = upper
+            self.pressureConstraint4.findData('value').value = str(pressureValue)
+        elif action == 3:
+            print 'top_down'
+            pressureValue = self.pressureConstraint3.findData('value').value[0][0] - pressure_change
+            if pressureValue < bottom:
+                pressureValue = bottom
+            self.pressureConstraint3.findData('value').value = str(pressureValue)
+            pressureValue = self.pressureConstraint4.findData('value').value[0][0] - pressure_change
+            if pressureValue < bottom:
+                pressureValue = bottom
+            self.pressureConstraint4.findData('value').value = str(pressureValue)
+        elif action == 4:
+            print 'bottom_left'
+            pressureValue = self.pressureConstraint1.findData('value').value[0][0] + pressure_change
+            if pressureValue > upper:
+                pressureValue = upper
+            self.pressureConstraint1.findData('value').value = str(pressureValue)
+            pressureValue = self.pressureConstraint2.findData('value').value[0][0] - pressure_change
+            if pressureValue < bottom:
+                pressureValue = bottom
+            self.pressureConstraint2.findData('value').value = str(pressureValue)
+        elif action == 5:
+            print 'bottom_right'
+            pressureValue = self.pressureConstraint2.findData('value').value[0][0] + pressure_change
+            if pressureValue > upper:
+                pressureValue = upper
+            self.pressureConstraint2.findData('value').value = str(pressureValue)
+            pressureValue = self.pressureConstraint1.findData('value').value[0][0] - pressure_change
+            if pressureValue < bottom:
+                pressureValue = bottom
+            self.pressureConstraint1.findData('value').value = str(pressureValue)
+        elif action == 6:
+            print 'bottom_up'
+            pressureValue = self.pressureConstraint1.findData('value').value[0][0] + pressure_change
+            if pressureValue > upper:
+                pressureValue = upper
+            self.pressureConstraint1.findData('value').value = str(pressureValue)
+            pressureValue = self.pressureConstraint2.findData('value').value[0][0] + pressure_change
+            if pressureValue > upper:
+                pressureValue = upper
+            self.pressureConstraint2.findData('value').value = str(pressureValue)
+        elif action == 7:
+            print 'bottom_down'
+            pressureValue = self.pressureConstraint1.findData('value').value[0][0] - pressure_change
+            if pressureValue < bottom:
+                pressureValue = bottom
+            self.pressureConstraint1.findData('value').value = str(pressureValue)
+            pressureValue = self.pressureConstraint2.findData('value').value[0][0] - pressure_change
+            if pressureValue < bottom:
+                pressureValue = bottom
+            self.pressureConstraint2.findData('value').value = str(pressureValue)

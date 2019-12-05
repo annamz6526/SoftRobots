@@ -58,9 +58,9 @@ def createScene(rootNode):
 				cubeCollis.createObject('MeshObjLoader', name="loader", filename="data/mesh/smCube27.obj", triangulate="true",  scale="0.5")
 				cubeCollis.createObject('Mesh', src="@loader")
 				cubeCollis.createObject('MechanicalObject')
-				cubeCollis.createObject('Triangle')
-				cubeCollis.createObject('Line')
-				cubeCollis.createObject('Point')
+				#cubeCollis.createObject('Triangle')
+				#cubeCollis.createObject('Line')
+				#cubeCollis.createObject('Point')
 				cubeCollis.createObject('RigidMapping')
 
 				#visualization
@@ -82,9 +82,9 @@ def createScene(rootNode):
 				e.createObject('TetrahedronSetTopologyAlgorithms', template='Vec3d')
 				e.createObject('TetrahedronSetGeometryAlgorithms', template='Vec3d')
 
-				e.createObject('BoxROI', name='ProjectToPlane', box=" 200 15 200 -200 -15 -200 ", drawBoxes='1', drawSize='1')
+				#e.createObject('BoxROI', name='ProjectToPlane', box=" 200 15 -35 -200 -15 -50 ", drawBoxes='1', drawSize='1')
 				#e.createObject('ProjectToPlaneConstraint', normal='1 0 0', indices=e.dofs.indices, drawSize='0.1')
-				#e.createObject('BoxConstraint', drawSize='0.03')
+				#e.createObject('BoxConstraint', box='200 15 -35 -200 -15 -50', drawBoxes='1', drawSize='1')
 
 				# Bounding Box
 				e.createObject('BoxROI', name='boxROI', box="60 13 157 -20 -13 153", drawBoxes='true', drawSize='1', doUpdate='0')
