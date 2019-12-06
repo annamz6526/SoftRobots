@@ -35,7 +35,7 @@ def createScene(rootNode):
 
 				rootNode.createObject('BackgroundSetting', color='0 0.168627 0.211765')
 				rootNode.createObject('OglSceneFrame', style="Arrows", alignment="TopRight")
-				rootNode.createObject('PythonScriptController', filename="pythonControllers/new_controller.py", classname="controller")
+				#rootNode.createObject('PythonScriptController', filename="pythonControllers/new_controller.py", classname="controller")
 
 				planeNode = rootNode.createChild('Plane')
 				planeNode.createObject('MeshObjLoader', name='loader', filename="data/mesh/floorFlat.obj", triangulate="true", rotation="0 0 0", scale=13, translation="0 -25 0")
@@ -91,25 +91,25 @@ def createScene(rootNode):
 				e.createObject('RestShapeSpringsForceField', points='@boxROI.indices', stiffness='1e12', angularStiffness='1e12')
 
 				# Stiff layer
-				e.createObject('BoxROI', name='boxROISubTopo', box="60 13 157 -20 -13 153", drawBoxes='true', drawSize='1')
-				e.createObject('LinearSolverConstraintCorrection', name="LinearSolverConstraintCorrection")
-				modelSubTopo = e.createChild('modelSubTopo')
-				modelSubTopo.createObject('TetrahedronSetTopologyContainer', position='@loader.position', tetrahedra="@boxROISubTopo.tetrahedraInROI", name='container')
-				modelSubTopo.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus=str(youngModulusStiffLayerFingers-youngModulusFingers))
+				#e.createObject('BoxROI', name='boxROISubTopo', box="60 13 157 -20 -13 153", drawBoxes='true', drawSize='1')
+				#e.createObject('LinearSolverConstraintCorrection', name="LinearSolverConstraintCorrection")
+				#modelSubTopo = e.createChild('modelSubTopo')
+				#modelSubTopo.createObject('TetrahedronSetTopologyContainer', position='@loader.position', tetrahedra="@boxROISubTopo.tetrahedraInROI", name='container')
+				#modelSubTopo.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus=str(youngModulusStiffLayerFingers-youngModulusFingers))
 
 
-				e.createObject('BoxROI', name='boxROISubTopo2', box="60 13 57 -20 -13 53", drawBoxes='true', drawSize='1')
-				e.createObject('LinearSolverConstraintCorrection', name="LinearSolverConstraintCorrection")
-				modelSubTopo2 = e.createChild('modelSubTopo2')
-				modelSubTopo2.createObject('TetrahedronSetTopologyContainer', position='@loader.position', tetrahedra="@boxROISubTopo2.tetrahedraInROI", name='container')
-				modelSubTopo2.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus=str(youngModulusStiffLayerFingers-youngModulusFingers))
+				#e.createObject('BoxROI', name='boxROISubTopo2', box="60 13 57 -20 -13 53", drawBoxes='true', drawSize='1')
+				#e.createObject('LinearSolverConstraintCorrection', name="LinearSolverConstraintCorrection")
+				#modelSubTopo2 = e.createChild('modelSubTopo2')
+				#modelSubTopo2.createObject('TetrahedronSetTopologyContainer', position='@loader.position', tetrahedra="@boxROISubTopo2.tetrahedraInROI", name='container')
+				#modelSubTopo2.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus=str(youngModulusStiffLayerFingers-youngModulusFingers))
 
 
-				e.createObject('BoxROI', name='boxROISubTopo3', box="60 13 -41 -20 -13 -45", drawBoxes='true', drawSize='1')
-				e.createObject('LinearSolverConstraintCorrection', name="LinearSolverConstraintCorrection")
-				modelSubTopo3 = e.createChild('modelSubTopo3')
-				modelSubTopo3.createObject('TetrahedronSetTopologyContainer', position='@loader.position', tetrahedra="@boxROISubTopo3.tetrahedraInROI", name='container')
-				modelSubTopo3.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus=str(youngModulusStiffLayerFingers-youngModulusFingers))
+				#e.createObject('BoxROI', name='boxROISubTopo3', box="60 13 -41 -20 -13 -45", drawBoxes='true', drawSize='1')
+				#e.createObject('LinearSolverConstraintCorrection', name="LinearSolverConstraintCorrection")
+				#modelSubTopo3 = e.createChild('modelSubTopo3')
+				#modelSubTopo3.createObject('TetrahedronSetTopologyContainer', position='@loader.position', tetrahedra="@boxROISubTopo3.tetrahedraInROI", name='container')
+				#modelSubTopo3.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus=str(youngModulusStiffLayerFingers-youngModulusFingers))
 
 
 
