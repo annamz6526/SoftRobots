@@ -124,3 +124,16 @@
 --- NEW SESSION: 04/12/2019 17:42:09 ---
 /actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.cavityVolume = 6070.73
 /actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.volumeGrowth = -3019.56
+
+--- NEW SESSION: 06/12/2019 02:33:45 ---
+/actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.cavityVolume = 357228
+/actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.pressure = 0.4901
+/actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.volumeGrowth = 353848
+/actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.cavityVolume = 115967
+/actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.pressure = 0.4
+/actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.volumeGrowth = 112588
+/actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.cavityVolume = 145847
+/actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.pressure = 0.4
+/actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.volumeGrowth = 142468
+/actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.cavityVolume = 13152.4
+/actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.volumeGrowth = 9773.28

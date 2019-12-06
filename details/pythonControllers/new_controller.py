@@ -19,10 +19,10 @@ def sendMessageOnly(sock, msg, ip, port):
 class controller(Sofa.PythonScriptController):
 
     def onLoaded(self, node):
-        with keyboard.pressed(Key.shift):
-            keyboard.press('v')
-            keyboard.release('v')
-        node.getRootContext().animate = True
+        # with keyboard.pressed(Key.shift):
+        #     keyboard.press('v')
+        #     keyboard.release('v')
+        # node.getRootContext().animate = True
         server_addr = ('', 7777)
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -106,8 +106,8 @@ class controller(Sofa.PythonScriptController):
             self.pressureConstraint4 = self.pressureConstraint4Node.getObject('SurfacePressureConstraint')
 
 
-            upper = 1
-            bottom = -1
+            upper = 0.2
+            bottom = -0.2
             pressure_change = 0.01
             #if (c == "Z"):
             if ord(c)==90:
@@ -117,8 +117,8 @@ class controller(Sofa.PythonScriptController):
                     pressureValue = upper
                 self.pressureConstraint1.findData('value').value = str(pressureValue)
                 pressureValue = self.pressureConstraint2.findData('value').value[0][0] - pressure_change
-                if pressureValue < 0:
-                    pressureValue = 0
+                if pressureValue < bottom:
+                    pressureValue = bottom
                 self.pressureConstraint2.findData('value').value = str(pressureValue)
 
             #if (c == "X"):
@@ -129,8 +129,8 @@ class controller(Sofa.PythonScriptController):
                     pressureValue = upper
                 self.pressureConstraint2.findData('value').value = str(pressureValue)
                 pressureValue = self.pressureConstraint1.findData('value').value[0][0] - pressure_change
-                if pressureValue < 0:
-                    pressureValue = 0
+                if pressureValue < bottom:
+                    pressureValue = bottom
                 self.pressureConstraint1.findData('value').value = str(pressureValue)
 
             # UP key :
@@ -150,12 +150,12 @@ class controller(Sofa.PythonScriptController):
             if ord(c)==21:
                 print 'short'
                 pressureValue = self.pressureConstraint2.findData('value').value[0][0] - pressure_change
-                if pressureValue < -1.2:
-                    pressureValue = -1.2
+                if pressureValue < bottom:
+                    pressureValue = bottom
                 self.pressureConstraint2.findData('value').value = str(pressureValue)
                 pressureValue = self.pressureConstraint1.findData('value').value[0][0] - pressure_change
-                if pressureValue < -1.2:
-                    pressureValue = -1.2
+                if pressureValue < bottom:
+                    pressureValue = bottom
                 self.pressureConstraint1.findData('value').value = str(pressureValue)
 
             #if (c == "Q"):
@@ -189,14 +189,14 @@ class controller(Sofa.PythonScriptController):
         #if self.index == 0:
         #    command = "rm /home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/screenshots/*"
         #else:
-        if self.index > 0:
-            command = "mv /home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/screenshots/* /home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/new_screenshots/" + str(self.episode) + "_" + str(self.index) + ".png"
-            print("command: " ,command)
-            os.system(command)
+        # if self.index > 0:
+        #     command = "mv /home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/screenshots/* /home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/new_screenshots/" + str(self.episode) + "_" + str(self.index) + ".png"
+        #     print("command: " ,command)
+        #     os.system(command)
 
         if self.index > 0:
             server_addr = ('', 7777)
-            self.listenToEnv(server_addr)
+            #self.listenToEnv(server_addr)
 
         self.index = self.index + 1
         print("index: ", self.index)
