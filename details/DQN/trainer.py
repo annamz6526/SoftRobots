@@ -23,8 +23,8 @@ def main():
 	gamma = 0.9
 	epsilon = .95
 	model_ph = 'models'
-	if not os.path.exits(model_ph):
-		os.path.mkdir(model_ph)
+	if not os.path.exists(model_ph):
+		os.mkdir(model_ph)
 	trials = 1000
 	trial_len = 500
 	
@@ -34,6 +34,7 @@ def main():
 	for trial in range(trials):
 		cur_state = env.reset()
 		for step in range(trial_len):
+			print('trial: {}, step: {}'.format(trial, step))
 			action = dqn_agent.act(cur_state)
 			new_state, reward, done = env.step(action)
 	
@@ -47,7 +48,7 @@ def main():
 			cur_state = new_state
 			if done:
 				break
-		if step >= 199:
+		if step >= 10:
 			print("Failed to complete in trial {}".format(trial))
 			if step % 10 == 0:
 				dqn_agent.save_model(os.path.join(model_ph, "trial-{}.model").format(trial))

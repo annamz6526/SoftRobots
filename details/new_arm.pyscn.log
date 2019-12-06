@@ -137,3 +137,35 @@
 /actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.volumeGrowth = 142468
 /actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.cavityVolume = 13152.4
 /actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.volumeGrowth = 9773.28
+
+--- NEW SESSION: 06/12/2019 03:42:29 ---
+/actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.cavityVolume = 21118.8
+/actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.volumeGrowth = 17739.6
+/actuator/ElasticMaterialObject/cavity4/SurfacePressureConstraint.cavityVolume = 59893
+/actuator/ElasticMaterialObject/cavity4/SurfacePressureConstraint.volumeGrowth = 56513.9
+
+--- NEW SESSION: 06/12/2019 04:10:34 ---
+/actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.cavityVolume = 9042.62
+/actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.pressure = 0.4
+/actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.volumeGrowth = 5663.48
+/actuator/ElasticMaterialObject/cavity4/SurfacePressureConstraint.cavityVolume = 831.251
+/actuator/ElasticMaterialObject/cavity4/SurfacePressureConstraint.pressure = -0.4
+/actuator/ElasticMaterialObject/cavity4/SurfacePressureConstraint.volumeGrowth = -2547.86
+/actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.cavityVolume = 9042.62
+/actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.pressure = 0.4
+/actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.volumeGrowth = 5663.48
+/actuator/ElasticMaterialObject/cavity4/SurfacePressureConstraint.cavityVolume = 831.251
+/actuator/ElasticMaterialObject/cavity4/SurfacePressureConstraint.pressure = -0.4
+/actuator/ElasticMaterialObject/cavity4/SurfacePressureConstraint.volumeGrowth = -2547.86
+/actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.cavityVolume = 9042.62
+/actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.pressure = 0.4
+/actuator/ElasticMaterialObject/cavity3/SurfacePressureConstraint.volumeGrowth = 5663.48
+/actuator/ElasticMaterialObject/cavity4/SurfacePressureConstraint.cavityVolume = 831.251
+/actuator/ElasticMaterialObject/cavity4/SurfacePressureConstraint.pressure = -0.4
+/actuator/ElasticMaterialObject/cavity4/SurfacePressureConstraint.volumeGrowth = -2547.86
+
+--- NEW SESSION: 06/12/2019 04:17:51 ---
+/actuator/ElasticMaterialObject/CollisionModel/Triangle.color = 1 0.498039 0 1
+
+--- NEW SESSION: 06/12/2019 04:20:37 ---
+/actuator/ElasticMaterialObject/CollisionModel/Triangle.color = 1 0.498039 0 1

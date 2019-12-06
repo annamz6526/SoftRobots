@@ -7,6 +7,7 @@ import time
 import os
 import math
 import json
+import random
 from pynput.keyboard import Key, Controller
 
 keyboard = Controller()
@@ -19,20 +20,16 @@ def sendMessageOnly(sock, msg, ip, port):
 class controller(Sofa.PythonScriptController):
 
     def onLoaded(self, node):
-        # with keyboard.pressed(Key.shift):
-        #     keyboard.press('v')
-        #     keyboard.release('v')
-        # node.getRootContext().animate = True
+        with keyboard.pressed(Key.shift):
+            keyboard.press('v')
+            keyboard.release('v')
+        node.getRootContext().animate = True
         server_addr = ('', 7777)
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.sock.bind((server_addr))
 
     def listenToEnv(self, server_addr):
-        # sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        # sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        # sock.bind((server_addr))
-        print("here")
         while True:
             received, addr = self.sock.recvfrom(1024)
             data = json.loads(received.decode('utf-8'))
@@ -40,20 +37,28 @@ class controller(Sofa.PythonScriptController):
             if state == 'reset':
                 #TODO reset and send image 
                 print(data)
-                # self.index = 0
                 self.lastGoalDistance = 0
                 self.avgGoalDelta = 0
                 self.rewardHistory = 0
                 self.collision = False
                 self.node.reset()
                 data = {
-                    'imgName' : '/home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/new_screenshots/' + str(self.episode) + "_" + str(self.index) + '.png',
+                    'imgName' : '~/SOFA_v19.06.99_custom_Linux_v5.1/new_screenshots/' + str(self.episode) + "_" + str(self.index) + '.png',
                     'reward' : None
                 }
                 print(data)
                 sendMessageOnly(self.sock, data, addr[0], addr[1])
                 self.episode = self.episode + 1
                 self.index = 0
+                reachable_area = [-50, 0, -70, 90, 15, 0]
+                x_range = range(reachable_area[0], reachable_area[3])
+                y_range = range(reachable_area[1], reachable_area[4])
+                z_range = range(reachable_area[2], reachable_area[5])
+                x_pos = random.sample(x_range, 1)
+                y_pos = random.sample(y_range, 1)
+                z_pos = random.sample(z_range, 1)
+                self.cubeNode.MechanicalObject.findData('position').value = str(x_pos[0]) + " " + str(y_pos[0]) + " " + str(z_pos[0]) + " " + "0 0 0 0"
+                #print("cube position: ", self.cubeNode.MechanicalObject.findData('position').value)
                 break
             elif state == 'step':
                 #TODO actions and send image 
@@ -61,7 +66,7 @@ class controller(Sofa.PythonScriptController):
                 self.execute(data['action'])
                 data['action']
                 data = {
-                    'imgName' : '/home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/new_screenshots/' + str(self.episode) + "_" + str(self.index) + '.png',
+                    'imgName' : '~/SOFA_v19.06.99_custom_Linux_v5.1/new_screenshots/' + str(self.episode) + "_" + str(self.index) + '.png',
                     'reward' : self.rewardHistory,
                     'done' : self.endEpisode
                 }
@@ -106,8 +111,8 @@ class controller(Sofa.PythonScriptController):
             self.pressureConstraint4 = self.pressureConstraint4Node.getObject('SurfacePressureConstraint')
 
 
-            upper = 0.2
-            bottom = -0.2
+            upper = 0.8
+            bottom = -0.8
             pressure_change = 0.005
             #if (c == "Z"):
             if ord(c)==90:
@@ -182,6 +187,31 @@ class controller(Sofa.PythonScriptController):
                     pressureValue = bottom
                 self.pressureConstraint3.findData('value').value = str(pressureValue)
 
+            # LEFT key :
+            if ord(c)==20:
+                print 'long'
+                pressureValue = self.pressureConstraint3.findData('value').value[0][0] + pressure_change
+                if pressureValue > upper:
+                    pressureValue = upper
+                self.pressureConstraint3.findData('value').value = str(pressureValue)
+                pressureValue = self.pressureConstraint4.findData('value').value[0][0] + pressure_change
+                if pressureValue > upper:
+                    pressureValue = upper
+                self.pressureConstraint4.findData('value').value = str(pressureValue)
+
+
+            # RIGHT key : rear
+            if ord(c)==18:
+                print 'short'
+                pressureValue = self.pressureConstraint3.findData('value').value[0][0] - pressure_change
+                if pressureValue < bottom:
+                    pressureValue = bottom
+                self.pressureConstraint3.findData('value').value = str(pressureValue)
+                pressureValue = self.pressureConstraint4.findData('value').value[0][0] - pressure_change
+                if pressureValue < bottom:
+                    pressureValue = bottom
+                self.pressureConstraint4.findData('value').value = str(pressureValue)
+
 
     def onEndAnimationStep(self, dt):
         # Save screenshots
@@ -189,14 +219,14 @@ class controller(Sofa.PythonScriptController):
         #if self.index == 0:
         #    command = "rm /home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/screenshots/*"
         #else:
-        # if self.index > 0:
-        #     command = "mv /home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/screenshots/* /home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/new_screenshots/" + str(self.episode) + "_" + str(self.index) + ".png"
-        #     print("command: " ,command)
-        #     os.system(command)
+        if self.index > 0:
+            command = "mv ~/SOFA_v19.06.99_custom_Linux_v5.1/screenshots/* ~/SOFA_v19.06.99_custom_Linux_v5.1/new_screenshots/" + str(self.episode) + "_" + str(self.index) + ".png"
+            print("command: " ,command)
+            os.system(command)
 
         if self.index > 0:
             server_addr = ('', 7777)
-            #self.listenToEnv(server_addr)
+            self.listenToEnv(server_addr)
 
         self.index = self.index + 1
         print("index: ", self.index)
@@ -204,9 +234,9 @@ class controller(Sofa.PythonScriptController):
         return
 
     def execute(self, action):
-        upper = 1
-        bottom = -1
-        pressure_change = 0.01
+        upper = 0.8
+        bottom = -0.8
+        pressure_change = 0.005
 
         if action == 0:
             print 'top_left'

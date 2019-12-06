@@ -9,8 +9,8 @@ from splib.numerics import vec3
 from stlib.scene import Scene, Interaction
 
 
-youngModulusFingers = 500
-youngModulusStiffLayerFingers = 2000
+youngModulusFingers = 800
+youngModulusStiffLayerFingers = 10000
 
 
 # red, green, blue
@@ -24,7 +24,7 @@ def createScene(rootNode):
 				rootNode.createObject('VisualStyle', displayFlags='showVisualModels hideBehaviorModels hideCollisionModels hideBoundingCollisionModels hideForceFields showInteractionForceFields hideWireframe')
 				#rootNode.findData('gravity').value='0 -9810 0';
 				rootNode.findData('gravity').value='0 0 0';
-				rootNode.findData('dt').value='0.01';
+				rootNode.findData('dt').value='0.02';
 				rootNode.createObject('FreeMotionAnimationLoop')
 				rootNode.createObject('GenericConstraintSolver', tolerance="1e-5", maxIterations="1000")
 				rootNode.createObject('CollisionPipeline', verbose="0")
@@ -54,19 +54,19 @@ def createScene(rootNode):
 				cube.createObject('UncoupledConstraintCorrection')
 
 				#collision
-				cubeCollis = cube.createChild('cubeCollis')
-				cubeCollis.createObject('MeshObjLoader', name="loader", filename="data/mesh/smCube27.obj", triangulate="true",  scale="0.5")
-				cubeCollis.createObject('Mesh', src="@loader")
-				cubeCollis.createObject('MechanicalObject')
+				#cubeCollis = cube.createChild('cubeCollis')
+				#cubeCollis.createObject('MeshObjLoader', name="loader", filename="data/mesh/smCube27.obj", triangulate="true",  scale="3")
+				#cubeCollis.createObject('Mesh', src="@loader")
+				#cubeCollis.createObject('MechanicalObject')
 				#cubeCollis.createObject('Triangle')
 				#cubeCollis.createObject('Line')
 				#cubeCollis.createObject('Point')
-				cubeCollis.createObject('RigidMapping')
+				#cubeCollis.createObject('RigidMapping')
 
 				#visualization
 				cubeVisu = cube.createChild('cubeVisu')
 				cubeVisu.createObject('MeshObjLoader', name="loader", filename="data/mesh/smCube27.obj")
-				cubeVisu.createObject('OglModel', name="Visual", src="@loader", color="0.0 0.1 0.5", scale="0.5")
+				cubeVisu.createObject('OglModel', name="Visual", src="@loader", color="0.0 0.1 0.5", scale="3")
 				# If there is no RIgidMapping, the position of visu will be at the position of Mesh
 				cubeVisu.createObject('RigidMapping')
 
@@ -75,9 +75,9 @@ def createScene(rootNode):
 				# Actuator Model	 					 #
 				##########################################
 				actuator = rootNode.createChild('actuator')
-				#e = ElasticMaterialObject(actuator, volumeMeshFileName="model/unity-s.vtk", translation=[0,0,0], rotation=[90,0,0], surfaceMeshFileName="model/unity-s.stl", collisionMesh="model/collision.stl", withConstrain=True, youngModulus=youngModulusFingers, poissonRatio=0.3, totalMass=0.1)
-				e = ElasticMaterialObject(actuator, volumeMeshFileName="model/unity-s.vtk", translation=[-480,0,107], rotation=[90,0,0], surfaceMeshFileName="model/unity-s.stl", collisionMesh="model/collision.stl", withConstrain=True, youngModulus=youngModulusFingers, poissonRatio=0.3, totalMass=0.1)
-				#e = ElasticMaterialObject(actuator, volumeMeshFileName="model/unity-s.vtk", translation=[0,0,0], rotation=[0,0,0], withConstrain=True, youngModulus=youngModulusFingers, poissonRatio=0.3, totalMass=0.1)
+				#e = ElasticMaterialObject(actuator, volumeMeshFileName="model/unity-s.vtk", translation=[0,0,0], rotation=[90,0,0], surfaceMeshFileName="model/unity-s.stl", collisionMesh="model/unity-s.stl", withConstrain=True, youngModulus=youngModulusFingers, poissonRatio=0, totalMass=0.1)
+				e = ElasticMaterialObject(actuator, volumeMeshFileName="model/unity-s.vtk", translation=[-480,0,107], rotation=[90,0,0], surfaceMeshFileName="model/unity-s.stl", collisionMesh="model/unity-s.stl", withConstrain=True, youngModulus=youngModulusFingers, poissonRatio=0, totalMass=0.1)
+				#e = ElasticMaterialObject(actuator, volumeMeshFileName="model/unity-s.vtk", translation=[0,0,0], rotation=[0,0,0], withConstrain=True, youngModulus=youngModulusFingers, poissonRatio=0, totalMass=0.1)
 
 				e.createObject('TetrahedronSetTopologyModifier')
 				e.createObject('TetrahedronSetTopologyAlgorithms', template='Vec3d')
@@ -96,21 +96,21 @@ def createScene(rootNode):
 				e.createObject('LinearSolverConstraintCorrection', name="LinearSolverConstraintCorrection")
 				modelSubTopo = e.createChild('modelSubTopo')
 				modelSubTopo.createObject('TetrahedronSetTopologyContainer', position='@loader.position', tetrahedra="@boxROISubTopo.tetrahedraInROI", name='container')
-				modelSubTopo.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus=str(youngModulusStiffLayerFingers-youngModulusFingers))
+				modelSubTopo.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0',  youngModulus=str(youngModulusStiffLayerFingers-youngModulusFingers))
 
 
 				e.createObject('BoxROI', name='boxROISubTopo2', box="60 13 57 -20 -13 53", drawBoxes='true', drawSize='1')
 				e.createObject('LinearSolverConstraintCorrection', name="LinearSolverConstraintCorrection")
 				modelSubTopo2 = e.createChild('modelSubTopo2')
 				modelSubTopo2.createObject('TetrahedronSetTopologyContainer', position='@loader.position', tetrahedra="@boxROISubTopo2.tetrahedraInROI", name='container')
-				modelSubTopo2.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus=str(youngModulusStiffLayerFingers-youngModulusFingers))
+				modelSubTopo2.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0',  youngModulus=str(youngModulusStiffLayerFingers-youngModulusFingers))
 
 
 				e.createObject('BoxROI', name='boxROISubTopo3', box="60 13 -41 -20 -13 -45", drawBoxes='true', drawSize='1')
 				e.createObject('LinearSolverConstraintCorrection', name="LinearSolverConstraintCorrection")
 				modelSubTopo3 = e.createChild('modelSubTopo3')
 				modelSubTopo3.createObject('TetrahedronSetTopologyContainer', position='@loader.position', tetrahedra="@boxROISubTopo3.tetrahedraInROI", name='container')
-				modelSubTopo3.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0.3',  youngModulus=str(youngModulusStiffLayerFingers-youngModulusFingers))
+				modelSubTopo3.createObject('TetrahedronFEMForceField', template='Vec3d', name='FEM', method='large', poissonRatio='0',  youngModulus=str(youngModulusStiffLayerFingers-youngModulusFingers))
 
 
 

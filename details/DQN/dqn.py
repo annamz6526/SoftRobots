@@ -59,7 +59,7 @@ class DQN:
         self.epsilon *= self.epsilon_decay
         self.epsilon = max(self.epsilon_min, self.epsilon)
         print('eps: ', self.epsilon)
-        if np.random.random() < self.epsilon:
+        if random.random() < self.epsilon:
             return self.env.sample_action()
         return np.argmax(self.model.predict(state)[0])
 
