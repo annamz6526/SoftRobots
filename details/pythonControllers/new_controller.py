@@ -108,7 +108,7 @@ class controller(Sofa.PythonScriptController):
 
             upper = 0.2
             bottom = -0.2
-            pressure_change = 0.01
+            pressure_change = 0.005
             #if (c == "Z"):
             if ord(c)==90:
                 print 'left'

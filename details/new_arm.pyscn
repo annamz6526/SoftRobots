@@ -9,8 +9,8 @@ from splib.numerics import vec3
 from stlib.scene import Scene, Interaction
 
 
-youngModulusFingers = 800
-youngModulusStiffLayerFingers = 1800
+youngModulusFingers = 500
+youngModulusStiffLayerFingers = 2000
 
 
 # red, green, blue
