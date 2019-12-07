@@ -2,15 +2,15 @@ import socket
 import json
 import numpy as np
 
-import sys
-sys.path.remove('/opt/ros/kinetic/lib/python2.7/dist-packages')
+# import sys
+# sys.path.remove('/opt/ros/kinetic/lib/python2.7/dist-packages')
 import cv2
 import random
 from collections import deque
 
 actions = ['top_left', 'top_right','top_up', 'top_down', 'bottom_left', 'bottom_right', 'bottom_up', 'bottom_down']
 
-root_path = '/home/cui'
+root_path = '/home/zshen15'
 
 # data = [
 #     'imgName':,

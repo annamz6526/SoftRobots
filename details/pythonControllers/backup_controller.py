@@ -19,15 +19,15 @@ def sendMessageOnly(sock, msg, ip, port):
 
 class controller(Sofa.PythonScriptController):
 
-    # def onLoaded(self, node):
-    #     with keyboard.pressed(Key.shift):
-    #         keyboard.press('v')
-    #         keyboard.release('v')
-    #     node.getRootContext().animate = True
-    #     server_addr = ('', 7777)
-    #     self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    #     self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    #     self.sock.bind((server_addr))
+    def onLoaded(self, node):
+        with keyboard.pressed(Key.shift):
+            keyboard.press('v')
+            keyboard.release('v')
+        node.getRootContext().animate = True
+        server_addr = ('', 7777)
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.sock.bind((server_addr))
 
     def listenToEnv(self, server_addr):
         while True:
@@ -110,7 +110,7 @@ class controller(Sofa.PythonScriptController):
 
             upper = 0.8
             bottom = -0.8
-            pressure_change = 0.03
+            pressure_change = 0.005
             #if (c == "Z"):
             if ord(c)==90:
                 print 'left'
@@ -216,14 +216,14 @@ class controller(Sofa.PythonScriptController):
         #if self.index == 0:
         #    command = "rm /home/zshen15/SOFA_v19.06.99_custom_Linux_v5.1/screenshots/*"
         #else:
-        # if self.index > 0:
-        #     command = "mv ~/SOFA_v19.06.99_custom_Linux_v5.1/screenshots/* ~/SOFA_v19.06.99_custom_Linux_v5.1/new_screenshots/" + str(self.episode) + "_" + str(self.index) + ".png"
-        #     print("command: " ,command)
-        #     os.system(command)
+        if self.index > 0:
+            command = "mv ~/SOFA_v19.06.99_custom_Linux_v5.1/screenshots/* ~/SOFA_v19.06.99_custom_Linux_v5.1/new_screenshots/" + str(self.episode) + "_" + str(self.index) + ".png"
+            print("command: " ,command)
+            os.system(command)
 
         if self.index > 0:
             server_addr = ('', 7777)
-            #self.listenToEnv(server_addr)
+            self.listenToEnv(server_addr)
 
         self.index = self.index + 1
         print("index: ", self.index)
@@ -233,7 +233,7 @@ class controller(Sofa.PythonScriptController):
     def execute(self, action):
         upper = 0.8
         bottom = -0.8
-        pressure_change = 0.005
+        pressure_change = 0.02
 
         if action == 0:
             print 'top_left'
@@ -355,5 +355,8 @@ class controller(Sofa.PythonScriptController):
         if self.collision:
             self.rewardHistory = 500
         else:
-            self.rewardHistory = self.avgGoalDelta * REWARD_MULT
+            if self.endEpisode:
+                self.rewardHistory = -300
+            else:
+                self.rewardHistory = self.avgGoalDelta * REWARD_MULT
         print("rewardHistory: ", self.rewardHistory)

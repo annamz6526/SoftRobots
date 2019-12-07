@@ -2,7 +2,7 @@ import numpy as np
 import random
 from env import ENV
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, Conv2D, Activation, MaxPooling2D, Flatten
+from keras.layers import Dense, Dropout, Conv2D, Activation, MaxPooling2D, Flatten, BatchNormalization
 from keras.optimizers import Adam
 
 from collections import deque
@@ -32,21 +32,22 @@ class DQN:
 
         model.add(Conv2D(32, (3, 3), padding='same',
                          input_shape=(state_shape[0], state_shape[1], 1)))
-        model.add(Activation('relu'))
-        model.add(Conv2D(32, (3, 3)))
+        # model.add(BatchNormalization())
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size=(2, 2)))
-        model.add(Dropout(0.25))
 
         model.add(Conv2D(64, (3, 3), padding='same'))
+        # model.add(BatchNormalization())
         model.add(Activation('relu'))
         model.add(Conv2D(64, (3, 3)))
+        # model.add(BatchNormalization())
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size=(2, 2)))
-        model.add(Dropout(0.25))
+        model.add(Dropout(0.4))
 
         model.add(Flatten())
         model.add(Dense(256, activation="relu"))
+        model.add(BatchNormalization())
         model.add(Dense(128, activation="relu"))
         model.add(Dense(len(self.env.action_space)))
         model.compile(loss="mean_squared_error",
@@ -79,7 +80,7 @@ class DQN:
             else:
                 Q_future = max(self.target_model.predict(new_state)[0])
                 target[0][action] = reward + Q_future * self.gamma
-            self.model.fit(state, target, epochs=1, verbose=1)
+            self.model.fit(state, target, epochs=1, verbose=2)
 
     def target_train(self):
         weights = self.model.get_weights()

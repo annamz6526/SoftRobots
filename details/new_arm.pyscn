@@ -35,10 +35,11 @@ def createScene(rootNode):
 
 				rootNode.createObject('BackgroundSetting', color='0 0.168627 0.211765')
 				rootNode.createObject('OglSceneFrame', style="Arrows", alignment="TopRight")
-				rootNode.createObject('PythonScriptController', filename="pythonControllers/new_controller.py", classname="controller")
+				#rootNode.createObject('PythonScriptController', filename="pythonControllers/new_controller.py", classname="controller")
+				rootNode.createObject('PythonScriptController', filename="pythonControllers/backup_controller.py", classname="controller")
 
 				planeNode = rootNode.createChild('Plane')
-				planeNode.createObject('MeshObjLoader', name='loader', filename="data/mesh/floorFlat.obj", triangulate="true", rotation="0 0 0", scale=13, translation="0 -25 0")
+				planeNode.createObject('MeshObjLoader', name='loader', filename="data/mesh/floorFlat.obj", triangulate="true", rotation="0 0 0", scale=13, translation="0 -50 0")
 				planeNode.createObject('Mesh', src="@loader")
 				planeNode.createObject('MechanicalObject', src="@loader")
 				planeNode.createObject('OglModel', name="Visual", src="@loader", color="1 0 0 1")
@@ -65,8 +66,9 @@ def createScene(rootNode):
 
 				#visualization
 				cubeVisu = cube.createChild('cubeVisu')
-				cubeVisu.createObject('MeshObjLoader', name="loader", filename="data/mesh/smCube27.obj")
-				cubeVisu.createObject('OglModel', name="Visual", src="@loader", color="0.0 0.1 0.5", scale="3")
+				#cubeVisu.createObject('MeshObjLoader', name="loader", filename="data/mesh/smCube27.obj")
+				cubeVisu.createObject('MeshObjLoader', name="loader", filename="data/mesh/ball.obj")
+				cubeVisu.createObject('OglModel', name="Visual", src="@loader", color="0.0 0.1 0.5", scale="10")
 				# If there is no RIgidMapping, the position of visu will be at the position of Mesh
 				cubeVisu.createObject('RigidMapping')
 

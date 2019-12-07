@@ -30,11 +30,12 @@ def main():
 	
 	# updateTargetNetwork = 1000
 	dqn_agent = DQN(env=env)
+	success_num = 0
 	steps = []
 	for trial in range(trials):
 		cur_state = env.reset()
 		for step in range(trial_len):
-			print('trial: {}, step: {}'.format(trial, step))
+			# print('trial: {}, step: {}'.format(trial, step))
 			action = dqn_agent.act(cur_state)
 			new_state, reward, done = env.step(action)
 	
@@ -47,15 +48,14 @@ def main():
 	
 			cur_state = new_state
 			if done:
+				success_num += 1
+				print("Completed in {} trials".format(trial))
+				dqn_agent.save_model(os.path.join(model_ph, "success-model.h5"))
 				break
-		if step >= 10:
-			print("Failed to complete in trial {}".format(trial))
-			if step % 10 == 0:
-				dqn_agent.save_model(os.path.join(model_ph, "trial-{}.model").format(trial))
-		else:
-			print("Completed in {} trials".format(trial))
-			dqn_agent.save_model(os.path.join(model_ph, "success.model"))
-			break
+			if step == trial_len-1:
+				print("Failed to complete in trial {}".format(trial))
+				dqn_agent.save_model(os.path.join(model_ph, "trial-{}-model.h5").format(trial))
+		print('trial: {}, success acc: {}'.format(trial, success / float(trial)))
 	# Test
 	# env = ENV(actions, (224, 224))
 	# # fn = 'test_data/1.jpg'
