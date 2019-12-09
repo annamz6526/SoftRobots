@@ -91,6 +91,7 @@ def createScene(rootNode):
 
 				# Bounding Box
 				e.createObject('BoxROI', name='boxROI', box="60 13 157 -20 -13 153", drawBoxes='true', drawSize='1', doUpdate='0')
+				#.createObject('BoxROI', name='reach', box="-30 0 -100 70 5 -20", drawBoxes='true', drawSize='1', doUpdate='0')
 				e.createObject('RestShapeSpringsForceField', points='@boxROI.indices', stiffness='1e12', angularStiffness='1e12')
 
 				# Stiff layer

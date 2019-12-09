@@ -1,28 +1,44 @@
+import csv
 import numpy as np
 import random
 from env import ENV
+import math
+import os 
+os.environ["CUDA_VISIBLE_DEVICES"]="1"
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Conv2D, Activation, MaxPooling2D, Flatten, BatchNormalization
+from keras.callbacks import Callback
 from keras.optimizers import Adam
 
 from collections import deque
 
 actions = ['top_left', 'top_right','top_up', 'top_down', 'bottom_left', 'bottom_right', 'bottom_up', 'bottom_down']
 
+class LossHistory(Callback):
+    def on_train_begin(self, logs={}):
+        self.losses = []
+
+    def on_batch_end(self, batch, logs={}):
+        self.losses.append(logs.get('loss'))
+
+
 
 class DQN:
     def __init__(self, env, batch_size = 32):
         self.env = env
-        self.memory = deque(maxlen=2000)
+        self.memory = deque(maxlen=10000)
         self.batch_size = batch_size
-
-        self.gamma = 0.85
-        self.epsilon = 1.0
-        self.epsilon_min = 0.01
-        self.epsilon_decay = 0.995
-        self.learning_rate = 0.005
+        self.step = 0
+        self.gamma = 0.9
+        self.eps_start = 0.9
+        self.eps_end = 0.1
+        self.eps_decay = 200
+        self.epsilon = 0.9
+        # self.epsilon_min = 0.05
+        # self.epsilon_decay = 0.995
+        self.learning_rate = 0.00001
         self.tau = .125
-
+        self.loss_log = []
         self.model = self.create_model()
         self.target_model = self.create_model()
 
@@ -34,7 +50,10 @@ class DQN:
                          input_shape=(state_shape[0], state_shape[1], 1)))
         # model.add(BatchNormalization())
         model.add(Activation('relu'))
-        model.add(MaxPooling2D(pool_size=(2, 2)))
+        model.add(Conv2D(32, (3, 3)))
+        # model.add(BatchNormalization())
+        model.add(Activation('relu'))
+        model.add(Dropout(0.3))
 
         model.add(Conv2D(64, (3, 3), padding='same'))
         # model.add(BatchNormalization())
@@ -43,7 +62,7 @@ class DQN:
         # model.add(BatchNormalization())
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size=(2, 2)))
-        model.add(Dropout(0.4))
+        model.add(Dropout(0.3))
 
         model.add(Flatten())
         model.add(Dense(256, activation="relu"))
@@ -57,11 +76,17 @@ class DQN:
         return model
 
     def act(self, state):
-        self.epsilon *= self.epsilon_decay
-        self.epsilon = max(self.epsilon_min, self.epsilon)
-        print('eps: ', self.epsilon)
+        # if self.step % 25 == 0:
+        #     self.epsilon *= self.epsilon_decay
+        #     self.epsilon = max(self.epsilon_min, self.epsilon)
+        #     print('eps: ', self.epsilon)
+        self.epsilon = self.eps_end + (self.eps_start - self.eps_end) * math.exp(-1. * self.step / self.eps_decay)
+        self.step += 1
+        if self.epsilon - self.eps_end <= 0.01:
+            self.step = 120
         if random.random() < self.epsilon:
             return self.env.sample_action()
+        print('eps: ', self.epsilon)
         return np.argmax(self.model.predict(state)[0])
 
     def remember(self, state, action, reward, new_state, done):
@@ -70,7 +95,7 @@ class DQN:
     def replay(self):
         if len(self.memory) < self.batch_size:
             return
-
+        q_value = []
         samples = random.sample(self.memory, self.batch_size)
         for sample in samples:
             state, action, reward, new_state, done = sample
@@ -79,8 +104,15 @@ class DQN:
                 target[0][action] = reward
             else:
                 Q_future = max(self.target_model.predict(new_state)[0])
+                print('Q_future: {}, reward: {}'.format(Q_future, reward))
                 target[0][action] = reward + Q_future * self.gamma
-            self.model.fit(state, target, epochs=1, verbose=2)
+                q_value.append(Q_future)
+            history = LossHistory()
+
+            self.model.fit(state, target, epochs=1, verbose=0,callbacks=[history])
+            self.loss_log.append(history.losses)
+
+        return np.mean(q_value) if q_value else 0.0 
 
     def target_train(self):
         weights = self.model.get_weights()
@@ -91,4 +123,10 @@ class DQN:
 
     def save_model(self, fn):
         self.model.save(fn)
+        self.target_model.save(''.join(fn.split('.')[:-1])+'target.h5')
 
+    def log_result(self):
+        with open('reward_and_Q/loss_data.csv', 'w') as f:
+            wr = csv.writer(f)
+            for loss_item in self.loss_log:
+                wr.writerow(loss_item)

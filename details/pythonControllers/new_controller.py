@@ -36,11 +36,9 @@ class controller(Sofa.PythonScriptController):
             state = data['state']
             if state == 'reset':
                 #TODO reset and send image 
-                print(data)
                 self.lastGoalDistance = 0
                 self.avgGoalDelta = 0
                 self.rewardHistory = 0
-                self.collision = False
                 self.node.reset()
                 data = {
                     'imgName' : '~/SOFA_v19.06.99_custom_Linux_v5.1/new_screenshots/' + str(self.episode) + "_" + str(self.index) + '.png',
@@ -49,15 +47,19 @@ class controller(Sofa.PythonScriptController):
                 sendMessageOnly(self.sock, data, addr[0], addr[1])
                 self.episode = self.episode + 1
                 self.index = 0
+                self.endEpisode = False
+                self.maxmin = False
                 reachable_area = [-50, 0, -70, 90, 15, 0]
-                x_range = range(reachable_area[0], reachable_area[3])
-                y_range = range(reachable_area[1], reachable_area[4])
-                z_range = range(reachable_area[2], reachable_area[5])
-                x_pos = random.sample(x_range, 1)
-                y_pos = random.sample(y_range, 1)
-                z_pos = random.sample(z_range, 1)
-                self.cubeNode.MechanicalObject.findData('position').value = str(x_pos[0]) + " " + str(y_pos[0]) + " " + str(z_pos[0]) + " " + "0 0 0 0"
-                #print("cube position: ", self.cubeNode.MechanicalObject.findData('position').value)
+                if self.collision == True:
+                    x_range = range(reachable_area[0], reachable_area[3])
+                    y_range = range(reachable_area[1], reachable_area[4])
+                    z_range = range(reachable_area[2], reachable_area[5])
+                    x_pos = random.sample(x_range, 1)
+                    y_pos = random.sample(y_range, 1)
+                    z_pos = random.sample(z_range, 1)
+                    self.cubeNode.MechanicalObject.findData('position').value = str(x_pos[0]) + " " + str(y_pos[0]) + " " + str(z_pos[0]) + " " + "0 0 0 0"
+                    #print("cube position: ", self.cubeNode.MechanicalObject.findData('position').value)
+                self.collision = False
                 break
             elif state == 'step':
                 #TODO actions and send image 
@@ -66,7 +68,10 @@ class controller(Sofa.PythonScriptController):
                     'imgName' : '~/SOFA_v19.06.99_custom_Linux_v5.1/new_screenshots/' + str(self.episode) + "_" + str(self.index) + '.png',
                     'reward' : self.rewardHistory,
                     'done' : self.endEpisode
+                    'success' : self.collision
                 }
+                if data['done']:
+                    print("Trial Success")
                 sendMessageOnly(self.sock, data, addr[0], addr[1])
                 break
                 
@@ -94,6 +99,7 @@ class controller(Sofa.PythonScriptController):
         #self.maxEpisodeLength =100
         self.endEpisode = False
         self.episode = 0
+        self.maxmin = False
 
     def onKeyPressed(self,c):
             self.dt = self.node.findData('dt').value
@@ -108,9 +114,9 @@ class controller(Sofa.PythonScriptController):
             self.pressureConstraint4 = self.pressureConstraint4Node.getObject('SurfacePressureConstraint')
 
 
-            upper = 0.8
-            bottom = -0.8
-            pressure_change = 0.03
+            upper = 0.7
+            bottom = -0.7
+            pressure_change = 0.02
             #if (c == "Z"):
             if ord(c)==90:
                 print 'left'
@@ -228,121 +234,158 @@ class controller(Sofa.PythonScriptController):
         self.index = self.index + 1
         print("index: ", self.index)
 
+        # # position of the middle point
+        # nodePos = self.actuatorNode.ElasticMaterialObject.getObject('dofs').position[2934]
+        # nodePosX = nodePos[0]
+        # nodePosY = nodePos[1]
+        # nodePosZ = nodePos[2]
+        # print("nodePos: ", nodePosX, nodePosY, nodePosZ)
+
+        # # position of the cube
+        # cubePos=self.cubeNode.MechanicalObject.findData('position').value;
+        # cubePosX = cubePos[0][0]
+        # cubePosY = cubePos[0][1]
+        # cubePosZ = cubePos[0][2]
+        # print("cube position: ", cubePosX, cubePosY, cubePosZ)
+
+        # # distance
+        # distGoal = (cubePosX - nodePosX)**2 + (cubePosZ - nodePosZ)**2;
+        # distGoal = math.sqrt(distGoal)
+        # print("distGoal: ", distGoal)
+
         return
 
     def execute(self, action):
         upper = 0.8
         bottom = -0.8
         pressure_change = 0.005
+        self.maxmin = False
 
         if action == 0:
             print 'top_left'
             pressureValue = self.pressureConstraint3.findData('value').value[0][0] + pressure_change
             if pressureValue > upper:
                 pressureValue = upper
+                self.maxmin = True
             self.pressureConstraint3.findData('value').value = str(pressureValue)
             pressureValue = self.pressureConstraint4.findData('value').value[0][0] - pressure_change
             if pressureValue < bottom:
                 pressureValue = bottom
+                self.maxmin = True
             self.pressureConstraint4.findData('value').value = str(pressureValue)
         elif action == 1:
             print 'top_right'
             pressureValue = self.pressureConstraint4.findData('value').value[0][0] + pressure_change
             if pressureValue > upper:
                 pressureValue = upper
+                self.maxmin = True
             self.pressureConstraint4.findData('value').value = str(pressureValue)
             pressureValue = self.pressureConstraint3.findData('value').value[0][0] - pressure_change
             if pressureValue < bottom:
                 pressureValue = bottom
+                self.maxmin = True
             self.pressureConstraint3.findData('value').value = str(pressureValue)
         elif action == 2:
             print 'top_up'
             pressureValue = self.pressureConstraint3.findData('value').value[0][0] + pressure_change
             if pressureValue > upper:
                 pressureValue = upper
+                self.maxmin = True
             self.pressureConstraint3.findData('value').value = str(pressureValue)
             pressureValue = self.pressureConstraint4.findData('value').value[0][0] + pressure_change
             if pressureValue > upper:
                 pressureValue = upper
+                self.maxmin = True
             self.pressureConstraint4.findData('value').value = str(pressureValue)
         elif action == 3:
             print 'top_down'
             pressureValue = self.pressureConstraint3.findData('value').value[0][0] - pressure_change
             if pressureValue < bottom:
                 pressureValue = bottom
+                self.maxmin = True
             self.pressureConstraint3.findData('value').value = str(pressureValue)
             pressureValue = self.pressureConstraint4.findData('value').value[0][0] - pressure_change
             if pressureValue < bottom:
                 pressureValue = bottom
+                self.maxmin = True
             self.pressureConstraint4.findData('value').value = str(pressureValue)
         elif action == 4:
             print 'bottom_left'
             pressureValue = self.pressureConstraint1.findData('value').value[0][0] + pressure_change
             if pressureValue > upper:
                 pressureValue = upper
+                self.maxmin = True
             self.pressureConstraint1.findData('value').value = str(pressureValue)
             pressureValue = self.pressureConstraint2.findData('value').value[0][0] - pressure_change
             if pressureValue < bottom:
                 pressureValue = bottom
+                self.maxmin = True
             self.pressureConstraint2.findData('value').value = str(pressureValue)
         elif action == 5:
             print 'bottom_right'
             pressureValue = self.pressureConstraint2.findData('value').value[0][0] + pressure_change
             if pressureValue > upper:
                 pressureValue = upper
+                self.maxmin = True
             self.pressureConstraint2.findData('value').value = str(pressureValue)
             pressureValue = self.pressureConstraint1.findData('value').value[0][0] - pressure_change
             if pressureValue < bottom:
                 pressureValue = bottom
+                self.maxmin = True
             self.pressureConstraint1.findData('value').value = str(pressureValue)
         elif action == 6:
             print 'bottom_up'
             pressureValue = self.pressureConstraint1.findData('value').value[0][0] + pressure_change
             if pressureValue > upper:
                 pressureValue = upper
+                self.maxmin = True
             self.pressureConstraint1.findData('value').value = str(pressureValue)
             pressureValue = self.pressureConstraint2.findData('value').value[0][0] + pressure_change
             if pressureValue > upper:
                 pressureValue = upper
+                self.maxmin = True
             self.pressureConstraint2.findData('value').value = str(pressureValue)
         elif action == 7:
             print 'bottom_down'
             pressureValue = self.pressureConstraint1.findData('value').value[0][0] - pressure_change
             if pressureValue < bottom:
                 pressureValue = bottom
+                self.maxmin = True
             self.pressureConstraint1.findData('value').value = str(pressureValue)
             pressureValue = self.pressureConstraint2.findData('value').value[0][0] - pressure_change
             if pressureValue < bottom:
                 pressureValue = bottom
+                self.maxmin = True
             self.pressureConstraint2.findData('value').value = str(pressureValue)
 
         # position of the middle point
-        nodePos = self.actuatorNode.ElasticMaterialObject.getObject('dofs').position[665]
+        nodePos = self.actuatorNode.ElasticMaterialObject.getObject('dofs').position[2934]
         nodePosX = nodePos[0]
         nodePosY = nodePos[1]
         nodePosZ = nodePos[2]
-        #print("nodePos: ", nodePosX, nodePosY, nodePosZ)
+        print("nodePos: ", nodePosX, nodePosY, nodePosZ)
 
         # position of the cube
         cubePos=self.cubeNode.MechanicalObject.findData('position').value;
         cubePosX = cubePos[0][0]
         cubePosY = cubePos[0][1]
         cubePosZ = cubePos[0][2]
-        #print("cube position: ", cubePosX, cubePosY, cubePosZ)
+        print("cube position: ", cubePosX, cubePosY, cubePosZ)
 
         # distance
         distGoal = (cubePosX - nodePosX)**2 + (cubePosZ - nodePosZ)**2;
         distGoal = math.sqrt(distGoal)
-        #print("distGoal: ", distGoal)
+        print("distGoal: ", distGoal)
 
         # collision detection
-        if (distGoal < 5):
+        if (distGoal < 10):
             self.collision = True
             self.endEpisode = True
 
         # interim rewards
         alpha = 0.3
         REWARD_MULT = 200
+
         
         print("index: ", self.index)
         if self.index > 0:

@@ -41,7 +41,7 @@ class ENV(object):
         data = json.loads(received.decode('utf-8'))
         state = (self.img_loader(data['imgName']))
 
-        return state, data['reward'], data['done']
+        return state, data['reward'], data['done'], data['success']
 
     def reset(self):
         data = {
