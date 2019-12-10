@@ -67,7 +67,7 @@ def createScene(rootNode):
 				#visualization
 				cubeVisu = cube.createChild('cubeVisu')
 				#cubeVisu.createObject('MeshObjLoader', name="loader", filename="data/mesh/smCube27.obj")
-				cubeVisu.createObject('MeshObjLoader', name="loader", filename="data/mesh/ball.obj")
+				cubeVisu.createObject('MeshObjLoader', name="loader", filename="data/mesh/ball.obj", scale="2")
 				cubeVisu.createObject('OglModel', name="Visual", src="@loader", color="0.0 0.1 0.5", scale="10")
 				# If there is no RIgidMapping, the position of visu will be at the position of Mesh
 				cubeVisu.createObject('RigidMapping')

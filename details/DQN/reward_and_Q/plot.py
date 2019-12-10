@@ -50,7 +50,7 @@ def plot_file(filename, type='loss'):
                 y.append(float(row[0]))
             else:
                 y.append(float(row[1]))
-
+        y = y[:10000]
         # Running tests will be empty.
         if len(y) == 0:
             return
@@ -58,7 +58,7 @@ def plot_file(filename, type='loss'):
 
         # Get the moving average so the graph isn't so crazy.
         if type == 'loss':
-            window = 100
+            window = 10
         else:
             window = 10
         y_av = movingaverage(y, window)

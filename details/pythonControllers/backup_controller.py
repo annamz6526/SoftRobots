@@ -248,7 +248,7 @@ class controller(Sofa.PythonScriptController):
     def execute(self, action):
         upper = 0.8
         bottom = -0.8
-        pressure_change = 0.01
+        pressure_change = 0.02
         self.maxmin = False
 
         if action == 0:

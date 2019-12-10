@@ -32,11 +32,11 @@ class DQN:
         self.gamma = 0.9
         self.eps_start = 0.9
         self.eps_end = 0.1
-        self.eps_decay = 200
+        self.eps_decay = 500
         self.epsilon = 0.9
         # self.epsilon_min = 0.05
         # self.epsilon_decay = 0.995
-        self.learning_rate = 0.00001
+        self.learning_rate = 0.0005
         self.tau = .125
         self.loss_log = []
         self.model = self.create_model()
@@ -50,11 +50,11 @@ class DQN:
                          input_shape=(state_shape[0], state_shape[1], 1)))
         # model.add(BatchNormalization())
         model.add(Activation('relu'))
-        model.add(Conv2D(32, (3, 3)))
+        # model.add(Conv2D(32, (3, 3)))
         # model.add(BatchNormalization())
-        model.add(Activation('relu'))
-        model.add(Dropout(0.3))
-
+        # model.add(Activation('relu'))
+        model.add(MaxPooling2D(pool_size=(2, 2)))
+        model.add(Dropout(0.25))
         model.add(Conv2D(64, (3, 3), padding='same'))
         # model.add(BatchNormalization())
         model.add(Activation('relu'))
@@ -62,17 +62,19 @@ class DQN:
         # model.add(BatchNormalization())
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size=(2, 2)))
-        model.add(Dropout(0.3))
+        model.add(Dropout(0.25))
+
+
 
         model.add(Flatten())
+        model.add(Dense(512, activation="relu"))
         model.add(Dense(256, activation="relu"))
-        model.add(BatchNormalization())
+        # model.add(BatchNormalization())
         model.add(Dense(128, activation="relu"))
         model.add(Dense(len(self.env.action_space)))
         model.compile(loss="mean_squared_error",
                       optimizer=Adam(lr=self.learning_rate))
-
-        print(model.summary())
+        model.summary()
         return model
 
     def act(self, state):
@@ -82,8 +84,6 @@ class DQN:
         #     print('eps: ', self.epsilon)
         self.epsilon = self.eps_end + (self.eps_start - self.eps_end) * math.exp(-1. * self.step / self.eps_decay)
         self.step += 1
-        if self.epsilon - self.eps_end <= 0.01:
-            self.step = 120
         if random.random() < self.epsilon:
             return self.env.sample_action()
         print('eps: ', self.epsilon)
@@ -95,24 +95,72 @@ class DQN:
     def replay(self):
         if len(self.memory) < self.batch_size:
             return
-        q_value = []
+        # q_value = []
         samples = random.sample(self.memory, self.batch_size)
-        for sample in samples:
+
+        state, target, q_value = self.create_minibatch(samples)
+        history = LossHistory()
+
+        self.model.fit(state, target, epochs=1, batch_size = self.batch_size,
+                        verbose=1,callbacks=[history])
+        self.loss_log.append(history.losses)
+        q_value = np.mean(q_value)
+
+        return q_value
+
+
+        # for sample in samples:
+        #     state, action, reward, new_state, done = sample
+        #     target = self.target_model.predict(state)
+        #     if done:
+        #         target[0][action] = reward
+        #     else:
+        #         Q_future = max(self.target_model.predict(new_state)[0])
+        #         print('Q_future: {}, reward: {}'.format(Q_future, reward))
+        #         target[0][action] = reward + Q_future * self.gamma
+        #         q_value.append(Q_future)
+        #     history = LossHistory()
+
+        #     self.model.fit(state, target, epochs=1, verbose=0,callbacks=[history])
+        #     self.loss_log.append(history.losses)
+
+        # return np.mean(q_value) if q_value else 0.0
+
+    def create_minibatch(self, samples):
+        mb_len = len(samples)
+        state_shape = self.env.img_size
+        old_states = np.zeros(shape=(mb_len, state_shape[0], state_shape[1], 1))
+        actions = np.zeros(shape=(mb_len,))
+        rewards = np.zeros(shape=(mb_len,))
+        terminations = np.empty(shape=(mb_len,))
+        new_states = np.zeros(shape=(mb_len, state_shape[0], state_shape[1], 1))
+
+        
+        for i, sample in enumerate(samples):
             state, action, reward, new_state, done = sample
-            target = self.target_model.predict(state)
-            if done:
-                target[0][action] = reward
-            else:
-                Q_future = max(self.target_model.predict(new_state)[0])
-                print('Q_future: {}, reward: {}'.format(Q_future, reward))
-                target[0][action] = reward + Q_future * self.gamma
-                q_value.append(Q_future)
-            history = LossHistory()
+            old_states[i, :] = state[...]
+            actions[i] = action
+            rewards[i] = reward
+            terminations[i] = done
+            new_states[i, :] = new_state[...]
+        # print('reward: {}'.format(rewards))
+        old_qvals = self.target_model.predict(old_states, batch_size=mb_len)
+        new_qvals = self.target_model.predict(new_states, batch_size=mb_len)
 
-            self.model.fit(state, target, epochs=1, verbose=0,callbacks=[history])
-            self.loss_log.append(history.losses)
+        maxQs = np.max(new_qvals, axis=1)
 
-        return np.mean(q_value) if q_value else 0.0 
+        y = old_qvals
+        #non_term_inds = np.where(np.logical_and(rewards != posreward, rewards != negreward))[0]
+        #term_inds = np.where(np.logical_or(rewards == posreward, rewards == negreward))[0]
+        non_term_inds = np.where(terminations == False)[0]
+        term_inds = np.where(terminations == True)[0]
+
+        y[non_term_inds, actions[non_term_inds].astype(int)] = rewards[non_term_inds] + (self.gamma * maxQs[non_term_inds])
+        y[term_inds, actions[term_inds].astype(int)] = rewards[term_inds]
+        #print (y[non_term_inds, actions[non_term_inds].astype(int)] )
+        X_train = old_states
+        y_train = y
+        return X_train, y_train, maxQs
 
     def target_train(self):
         weights = self.model.get_weights()
