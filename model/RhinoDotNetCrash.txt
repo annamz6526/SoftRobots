@@ -1,0 +1,30 @@
+System::AppDomain::CurrentDomain->UnhandledException event occurred
+
+SENDER: Name:DefaultDomain
+There are no context policies.
+
+
+EXCEPTION: System.InvalidOperationException
+MESSAGE: Invoke or BeginInvoke cannot be called on a control until the window handle has been created.
+SOURCE: "System.Windows.Forms"
+CALL STACK
+   at System.Windows.Forms.Control.MarshaledInvoke(Control caller, Delegate method, Object[] args, Boolean synchronous)
+   at System.Windows.Forms.Control.BeginInvoke(Delegate method, Object[] args)
+   at System.Windows.Forms.WindowsFormsSynchronizationContext.Post(SendOrPostCallback d, Object state)
+   at System.Net.WebClient.InvokeOperationCompleted(AsyncOperation asyncOp, SendOrPostCallback callback, AsyncCompletedEventArgs eventArgs)
+   at System.Net.WebClient.UploadBitsWriteCallback(IAsyncResult result)
+   at System.Net.LazyAsyncResult.Complete(IntPtr userToken)
+   at System.Net.LazyAsyncResult.ProtectedInvokeCallback(Object result, IntPtr userToken)
+   at System.Net.ConnectStream.ProcessWriteCallback(IAsyncResult asyncResult, LazyAsyncResult userResult)
+   at System.Net.LazyAsyncResult.Complete(IntPtr userToken)
+   at System.Net.LazyAsyncResult.ProtectedInvokeCallback(Object result, IntPtr userToken)
+   at System.Net.Security._SslStream.StartWriting(Byte[] buffer, Int32 offset, Int32 count, AsyncProtocolRequest asyncRequest)
+   at System.Net.Security._SslStream.WriteCallback(IAsyncResult transportResult)
+   at System.Net.LazyAsyncResult.Complete(IntPtr userToken)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Net.ContextAwareResult.Complete(IntPtr userToken)
+   at System.Net.LazyAsyncResult.ProtectedInvokeCallback(Object result, IntPtr userToken)
+   at System.Net.Sockets.BaseOverlappedAsyncResult.CompletionPortCallback(UInt32 errorCode, UInt32 numBytes, NativeOverlapped* nativeOverlapped)
+   at System.Threading._IOCompletionCallback.PerformIOCompletionCallback(UInt32 errorCode, UInt32 numBytes, NativeOverlapped* pOVERLAP)
